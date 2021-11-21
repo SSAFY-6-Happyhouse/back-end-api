@@ -1,0 +1,20 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
+  datasource:
+    url: jdbc:mysql://${spring.datasource.env}:3306/happyhouse?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    username: ssafy
+    password: ssafy
+    env: 15.164.229.190
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+
+server:
+  port: 8081
