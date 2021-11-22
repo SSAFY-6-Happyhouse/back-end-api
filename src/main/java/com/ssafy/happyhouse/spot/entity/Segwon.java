@@ -9,5 +9,4 @@ public enum Segwon {
     LIBRARY,
     HOSPITAL,
     CULTURE;
-
 }
