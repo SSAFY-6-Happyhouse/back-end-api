@@ -16,8 +16,8 @@ public class SearchSpotCategoryReq {
     private String y="";                   //중심좌표의 y값 혹은 latitude
     private int radius=0;                 //중심좌표로부터의 반경거리 (동그라미 범위, 단위는 meter )
     private String rect="";                //사각형 범위내에서 제한 검색을 위한 좌표
-    private int page = 1;                   //결과 페이지 번호(기본값 1 / 1~45 사이의 값)
-    private int size =15;                   //한페이지에 보여질 문서의 개수 (기본값 15 / 범위 1~15)
+    private int page=1;                   //결과 페이지 번호(기본값 1 / 1~45 사이의 값)
+    private int size=15;                   //한페이지에 보여질 문서의 개수 (기본값 15 / 범위 1~15)
     private String sort="accuracy";                //결과 정렬 순서 (distance 정렬 혹은 accuracy 기본값은 accuracy)
 
 
