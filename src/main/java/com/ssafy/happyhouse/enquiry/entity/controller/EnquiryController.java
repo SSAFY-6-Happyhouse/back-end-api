@@ -26,7 +26,7 @@ public class EnquiryController {
     }
 
     @PostMapping("/realty/{realty-id}")
-    public ResponseEntity<EnquiryDto> saveEnquiry(@RequestParam(name = "realty-id")Long realtyId, @RequestParam(name = "realty-id")String username){
+    public ResponseEntity<EnquiryDto> saveEnquiry(@RequestParam(name = "realty-id")Long realtyId, @RequestParam(name = "username")String username){
         EnquiryDto enquiryDto = enquiryService.saveEnquiry(username, realtyId);
         return new ResponseEntity<>(enquiryDto, HttpStatus.OK);
     }
