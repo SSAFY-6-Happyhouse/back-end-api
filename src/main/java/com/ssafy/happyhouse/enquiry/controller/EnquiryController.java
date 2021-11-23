@@ -1,7 +1,7 @@
-package com.ssafy.happyhouse.enquiry.entity.controller;
+package com.ssafy.happyhouse.enquiry.controller;
 
-import com.ssafy.happyhouse.enquiry.entity.model.EnquiryDto;
-import com.ssafy.happyhouse.enquiry.entity.service.EnquiryService;
+import com.ssafy.happyhouse.enquiry.model.EnquiryDto;
+import com.ssafy.happyhouse.enquiry.service.EnquiryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

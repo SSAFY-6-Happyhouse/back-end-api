@@ -1,7 +1,7 @@
-package com.ssafy.happyhouse.interest.entity.controller;
+package com.ssafy.happyhouse.interest.controller;
 
-import com.ssafy.happyhouse.interest.entity.model.InterestRealtyDto;
-import com.ssafy.happyhouse.interest.entity.service.InterestRealtyService;
+import com.ssafy.happyhouse.interest.model.InterestRealtyDto;
+import com.ssafy.happyhouse.interest.service.InterestRealtyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

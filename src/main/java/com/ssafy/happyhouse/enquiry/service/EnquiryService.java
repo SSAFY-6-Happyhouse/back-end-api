@@ -1,6 +1,6 @@
-package com.ssafy.happyhouse.enquiry.entity.service;
+package com.ssafy.happyhouse.enquiry.service;
 
-import com.ssafy.happyhouse.enquiry.entity.model.EnquiryDto;
+import com.ssafy.happyhouse.enquiry.model.EnquiryDto;
 
 public interface EnquiryService {
     public EnquiryDto getEnquiryByRealtyId(Long realtyId);

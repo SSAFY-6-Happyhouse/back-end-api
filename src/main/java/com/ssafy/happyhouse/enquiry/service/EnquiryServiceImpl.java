@@ -1,17 +1,18 @@
-package com.ssafy.happyhouse.enquiry.entity.service;
+package com.ssafy.happyhouse.enquiry.service;
 
 import com.ssafy.happyhouse.enquiry.entity.Enquiry;
-import com.ssafy.happyhouse.enquiry.entity.model.EnquiryDto;
-import com.ssafy.happyhouse.enquiry.entity.repository.EnquiryRepository;
+import com.ssafy.happyhouse.enquiry.model.EnquiryDto;
+import com.ssafy.happyhouse.enquiry.repository.EnquiryRepository;
 import com.ssafy.happyhouse.realty.entity.Realty;
 import com.ssafy.happyhouse.user.entity.User;
+import com.ssafy.happyhouse.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 @Service
 @RequiredArgsConstructor
-public class EnquiryServiceImpl implements EnquiryService{
+public class EnquiryServiceImpl implements EnquiryService {
 
     private final RealtyRepository realtyRepository;
     private final EnquiryRepository enquiryRepository;

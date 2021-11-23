@@ -1,4 +1,4 @@
-package com.ssafy.happyhouse.enquiry.entity.model;
+package com.ssafy.happyhouse.enquiry.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

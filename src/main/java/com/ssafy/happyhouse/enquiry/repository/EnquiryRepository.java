@@ -1,4 +1,4 @@
-package com.ssafy.happyhouse.enquiry.entity.repository;
+package com.ssafy.happyhouse.enquiry.repository;
 
 import com.ssafy.happyhouse.enquiry.entity.Enquiry;
 import com.ssafy.happyhouse.realty.entity.Realty;
