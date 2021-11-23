@@ -3,11 +3,9 @@ package com.ssafy.happyhouse.spot.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.ssafy.happyhouse.spot.entity.Spot;
 import lombok.Data;
 
-import java.awt.*;
-import java.util.StringTokenizer;
+
 
 ////Spot 정보를 category별로 Response하기 위한 DTO
 @Data
@@ -28,24 +26,5 @@ public class SearchSpotCategoryRes {
     private String distance;                //중심좌표까지의 거리 (단 x,y 파라미터를 준 경우에만 존재)
 
 
-    public Spot toEntity(){
-        int ix=((Double)x).intValue();
-        int iy=((Double)y).intValue();
-        Point point =new Point();
-        //Point2D point =new Point2D.Double(bx,by);
-        point.setLocation(ix,iy);
-        //System.out.println(point.getX());
-        //System.out.println(point.getY());
-
-        return Spot.builder()
-                .categoryCode(categoryGroupCode)
-                .categoryName(categoryGroupName)
-                .spotName(placeName)
-                .address(addressName)
-                .x(x)
-                .y(y)
-                .spotPoint(point)
-                .build();
-    }
 
 }

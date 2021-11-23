@@ -1,23 +1,13 @@
 package com.ssafy.happyhouse.spot.entity;
 
 public enum Segwon {
-    ALCOHOL,
-    STATION,
-    SCHOOL,
-    CONVENIENT_STORE,
-    FOREST,
-    LIBRARY,
-    HOSPITAL,
-    CULTURE,
-    대형마트,
-    편의점,
-    유치원,
-    학교,
-    학원,
-    지하철역,
-    문화시설,
-    관광명소,
-    음식점,
-    카페,
-    병원;
+    역세권,
+    편세권,
+    학세권,
+    숲세권,
+    병세권,
+    별세권,
+    문세권,
+    주세권,
+    마세권;
 }
