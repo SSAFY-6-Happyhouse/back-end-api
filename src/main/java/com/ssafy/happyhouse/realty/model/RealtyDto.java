@@ -27,7 +27,7 @@ public class RealtyDto {
     private Long likes;
     private Long hitCount;
     private List<Long> options;
-    private List<Long> interests;
+    private List<Long> interests;  //관심매물은 등록할 때 필요가 없음
     private List<Long> segwons;
 //    private LocalDateTime registerDate;
     

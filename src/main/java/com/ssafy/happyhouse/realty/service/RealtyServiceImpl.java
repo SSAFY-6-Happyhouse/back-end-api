@@ -2,6 +2,7 @@ package com.ssafy.happyhouse.realty.service;
 
 import com.ssafy.happyhouse.district.entity.Dong;
 import com.ssafy.happyhouse.interest.entity.InterestRealty;
+import com.ssafy.happyhouse.interest.repository.InterestRealtyRepository;
 import com.ssafy.happyhouse.realty.entity.*;
 import com.ssafy.happyhouse.realty.model.RealtyDto;
 import com.ssafy.happyhouse.realty.repository.RealtyRepository;
@@ -26,20 +27,20 @@ public class RealtyServiceImpl implements RealtyService{
     @Override
     public String saveRealty(RealtyDto realtyDto,String username) {
         try{
-//            User user = userRepository.findByUsername(username).get();//user객체 갖고오기
-//            Dong dong = dongRepository.findByDongname(address).get(); //dong객체 갖고오기
             Realty realty = realtyDto.toEntity();//애초에 Entity로 만들어놓고 Entity setter를 이용해 넣기
-
+            User user = userRepository.findByUsername(username).get();//user객체 갖고오기
+//            Dong dong = dongRepository.findByDongname(address).get(); //dong객체 갖고오기
 
             List<Option> options = new ArrayList<>();
             List<Long> optionValues = realtyDto.getOptions();
             List<Segwon> segwons = new ArrayList<>();
             List<Long> segwonValues = realtyDto.getSegwons();
-            List<InterestRealty> interestRealties = new ArrayList<>();
 
             RealtyType realtyType = RealtyType.values()[realtyDto.getRealtyType().intValue()]; //매물 형태
             ContractProcess contractProcess = ContractProcess.values()[realtyDto.getContractProcess().intValue()]; //거래 상황
             ContractType contractType = ContractType.values()[realtyDto.getContractType().intValue()];//거래 형태
+
+
 
             for(int i = 0 ; i< optionValues.size(); i++){ //옵션 리스트로 받아오기
                 options.add(Option.values()[optionValues.get(i).intValue()]);
@@ -54,7 +55,7 @@ public class RealtyServiceImpl implements RealtyService{
             realty.setRealtyType(realtyType);
             realty.setContractProcess(contractProcess);
             realty.setContractType(contractType);
-//            realty.setRegisterer(user);
+           realty.setRegisterer(user);
 //           realtyDto.setDong(dong);
             realtyRepository.save(realty); //dto에서는 service, repository layer에선 entity객체가 들어간다. 없으면 null이 들어감.
         }catch (Exception e){
