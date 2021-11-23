@@ -4,6 +4,7 @@ import com.ssafy.happyhouse.enquiry.entity.Enquiry;
 import com.ssafy.happyhouse.enquiry.model.EnquiryDto;
 import com.ssafy.happyhouse.enquiry.repository.EnquiryRepository;
 import com.ssafy.happyhouse.realty.entity.Realty;
+import com.ssafy.happyhouse.realty.repository.RealtyRepository;
 import com.ssafy.happyhouse.user.entity.User;
 import com.ssafy.happyhouse.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

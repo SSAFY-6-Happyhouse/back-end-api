@@ -1,4 +1,7 @@
 package com.ssafy.happyhouse.interest.service;
 
-public class InterestRealtyServiceImpl {
+import org.springframework.stereotype.Service;
+
+@Service
+public class InterestRealtyServiceImpl implements InterestRealtyService {
 }
