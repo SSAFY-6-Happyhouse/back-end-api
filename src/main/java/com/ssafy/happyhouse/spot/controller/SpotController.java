@@ -39,8 +39,7 @@ public class SpotController {
     @GetMapping("/a")
     public void registerSpot(){
 
-        //임시
-        Long dongtemp = 1L;
+
 
         for(SpotKeyword spotKeyword : SpotKeyword.values()) {
             SearchSpotCategoryReq spotreq = new SearchSpotCategoryReq();
