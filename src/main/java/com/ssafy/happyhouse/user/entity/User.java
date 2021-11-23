@@ -5,12 +5,19 @@ import com.ssafy.happyhouse.interest.entity.InterestDistrict;
 import com.ssafy.happyhouse.interest.entity.InterestRealty;
 import com.ssafy.happyhouse.realty.entity.Realty;
 import com.ssafy.happyhouse.spot.entity.Segwon;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "USERS")
 @Data
@@ -31,6 +38,9 @@ public class User {
 
     @Column(name = "phone")
     private String phone;
+
+    @Column(name = "isDisabled")
+    private Boolean isDisabled;
 
     //등록 매물
     @OneToMany(mappedBy = "registerer")
@@ -61,5 +71,13 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Report> reports;
 
+    //권한
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(
+            name="USER_AUTHORITIES",
+            joinColumns = @JoinColumn(name = "USER_ID")
+    )
+    private Set<Authority> authority;
 
 }
