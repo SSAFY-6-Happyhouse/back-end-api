@@ -21,7 +21,6 @@ import java.util.List;
 public class RealtyServiceImpl implements RealtyService{
     private final RealtyRepository realtyRepository;
     private final UserRepository userRepository;
-    private final InterestRealtyRepository interestRealtyRepository;
 //    private final ModelMapper modelMapper;
     //정석은 controller - service - servicimpl = 권한문제 발생할 수 있으므로
 
@@ -30,7 +29,6 @@ public class RealtyServiceImpl implements RealtyService{
         try{
             Realty realty = realtyDto.toEntity();//애초에 Entity로 만들어놓고 Entity setter를 이용해 넣기
             User user = userRepository.findByUsername(username).get();//user객체 갖고오기
-            InterestRealty inter = interestRealtyRepository.findByRealtyId(realty.getRealtyId()).get();//InterestRealty 객체 가져오기
 //            Dong dong = dongRepository.findByDongname(address).get(); //dong객체 갖고오기
 
             List<Option> options = new ArrayList<>();
@@ -57,7 +55,7 @@ public class RealtyServiceImpl implements RealtyService{
             realty.setRealtyType(realtyType);
             realty.setContractProcess(contractProcess);
             realty.setContractType(contractType);
-//           realty.setRegisterer(user);
+           realty.setRegisterer(user);
 //           realtyDto.setDong(dong);
             realtyRepository.save(realty); //dto에서는 service, repository layer에선 entity객체가 들어간다. 없으면 null이 들어감.
         }catch (Exception e){
