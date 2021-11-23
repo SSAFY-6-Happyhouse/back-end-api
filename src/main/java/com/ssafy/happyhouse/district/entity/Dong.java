@@ -2,6 +2,7 @@ package com.ssafy.happyhouse.district.entity;
 
 import com.ssafy.happyhouse.realty.entity.Realty;
 import com.ssafy.happyhouse.spot.entity.Spot;
+import lombok.Builder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "DONG")
+@Builder
 public class Dong {
     @Id
     @Column(name = "DONG_ID")
