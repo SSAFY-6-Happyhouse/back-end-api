@@ -62,7 +62,7 @@ public class Realty {
     private Long price;
 
     @Column(name = "CONTACT_TIME")
-    private LocalTime localTime;
+    private LocalTime contactTime;
 
     @Column(name = "DESCRIPTION")
     private String description;
@@ -122,18 +122,4 @@ public class Realty {
     @Column(name = "REALTY_POINT")
     private Point realtyPoint;
 
-    //매물 내용 수정
-    public Realty updateRealty(Realty updatedRealty){
-        if(StringUtils.hasText(updatedRealty.getAddress())){
-            this.address = updatedRealty.getAddress();
-        }
-        if(StringUtils.hasText(updatedRealty.getDescription())){
-            this.description = updatedRealty.getDescription();
-        }
-        if(StringUtils.hasText(updatedRealty.getHeat())){
-            this.heat = updatedRealty.getHeat();
-        }
-
-        return this;
-    }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class realty_enquiriesDto {
+public class RealtyEnquiriesDto {
     private RealtyDto realtyDto;
     private List<Enquiry> enquiries;
 }
