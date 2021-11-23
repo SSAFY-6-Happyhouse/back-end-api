@@ -5,8 +5,12 @@ import com.ssafy.happyhouse.enquiry.entity.Enquiry;
 import com.ssafy.happyhouse.interest.entity.InterestRealty;
 import com.ssafy.happyhouse.spot.entity.Segwon;
 import com.ssafy.happyhouse.user.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.geo.Point;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,6 +21,9 @@ import java.util.List;
 @Entity
 @Table(name = "REALTIES")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Realty {
     @Id
     @Column(name = "REALTY_ID")
@@ -35,7 +42,7 @@ public class Realty {
     @Column(name = "ADDRESS")
     private String address;
 
-    //난방
+    //옵션 관련
     @Column(name = "HEAT")
     private String heat;
 
@@ -67,10 +74,12 @@ public class Realty {
     //조회수
     @Column(name = "HIT_COUNT")
     private Long hitCount;
-
+    
+    //등록 날짜
     @Column(name = "REGISTER_DATE")
     private LocalDateTime registerDate;
 
+    //등록한 사람, Joincolumn= 외래키 맵핑, name에 매핑할 외래 키 이름 지정
     @ManyToOne
     @JoinColumn(name = "REGISTERER_ID")
     private User registerer;
@@ -112,4 +121,5 @@ public class Realty {
     //좌표
     @Column(name = "REALTY_POINT")
     private Point realtyPoint;
+
 }
