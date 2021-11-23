@@ -55,7 +55,7 @@ public class Realty {
     private Long price;
 
     @Column(name = "CONTACT_TIME")
-    private LocalTime localTime;
+    private LocalTime contactTime;
 
     @Column(name = "DESCRIPTION")
     private String description;
