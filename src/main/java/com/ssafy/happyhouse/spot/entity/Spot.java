@@ -1,8 +1,10 @@
 package com.ssafy.happyhouse.spot.entity;
 
 import com.ssafy.happyhouse.district.entity.Dong;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.awt.*;
@@ -10,6 +12,8 @@ import java.awt.geom.Point2D;
 
 @Entity
 @Table(name = "SPOTS")
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
 public class Spot {
