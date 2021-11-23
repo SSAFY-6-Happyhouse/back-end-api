@@ -8,6 +8,7 @@ kakao API 연동 / 검색 키워드로 spot정보 얻어오기 / DB 저장
 import com.ssafy.happyhouse.spot.dto.SearchSpotCategoryReq;
 import com.ssafy.happyhouse.spot.dto.SearchSpotCategoryRes;
 import com.ssafy.happyhouse.spot.dto.SearchSpotCategoryResMain;
+import com.ssafy.happyhouse.spot.service.SpotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -35,6 +36,8 @@ public class SpotGetAPIController {
     @Value("${kakao.key.Authorization}")
     private String kakaoAuthrization;
 
+    private final SpotService spotService;
+
     public SearchSpotCategoryResMain searchSpot(SearchSpotCategoryReq searchSpotCategoryReq){
 
         URI uri= UriComponentsBuilder.fromUriString(kakaoCategorySearchUrl)
@@ -51,6 +54,7 @@ public class SpotGetAPIController {
         ResponseEntity<Object> responseEntity=new RestTemplate().exchange(
                 uri, HttpMethod.GET,httpEntity,responseType
         );
+
 
         return (SearchSpotCategoryResMain) responseEntity.getBody();
     }
