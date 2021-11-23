@@ -8,8 +8,8 @@ spring:
       max-request-size: 30MB
   datasource:
     url: jdbc:mysql://${spring.datasource.env}:3306/happyhouse?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
-    username: ljk1256
-    password: dlwornjs1256
+    username: ssafy
+    password: ssafy
     env: 15.164.229.190
   jpa:
     hibernate:
