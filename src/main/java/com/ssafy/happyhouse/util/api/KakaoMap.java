@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 public class KakaoMap {
 
     //주소값을 바탕으로 좌표 저장하는 작업
-    public Coordinate getCoordinatesFromAddress(){
+    public Coordinate getCoordinatesFromAddress(String dong, String address){
+
         return null;
     }
 }
