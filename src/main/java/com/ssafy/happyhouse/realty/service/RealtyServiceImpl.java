@@ -18,11 +18,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
@@ -36,9 +38,27 @@ public class RealtyServiceImpl implements RealtyService{
     private final DongRepository dongRepository;
     private final RealtyPictureRepository realtyPictureRepository;
     private final FileHandler fileHandler;
-//    private final ModelMapper modelMapper;
-    private final ModelMapper modelMapper;
     //정석은 controller - service - servicimpl = 권한문제 발생할 수 있으므로
+
+    @Override
+    public Dong checkValidDong(String dongstr, List<String> dongValues) {//유효한 동Name인지 체크
+            StringTokenizer tk = new StringTokenizer(dongstr);
+            for(int i=0;i<3;i++){
+                dongValues.add(tk.nextToken());//0:서울시 1:성동구 2:응봉동
+            }
+            List<Dong> dong = dongRepository.findAllByDongName(dongValues.get(2));
+            //dong객체로 sidoName,gugunName과 동일하면 realty객체에 Dong객체를 넣어줘라.
+            for(int i=0;i<dong.size();i++){
+                Dong ddong = dong.get(i);
+                String sidoName = ddong.getSidoName();
+                String gugunName = ddong.getGugunName();
+
+                if(sidoName.equals(dongValues.get(0))&&gugunName.equals(dongValues.get(1))){
+                    return ddong;
+                }
+            }
+        return null;
+    }
 
     @Override
     public String saveImage(List<MultipartFile> multipartFile) throws Exception {
@@ -51,7 +71,7 @@ public class RealtyServiceImpl implements RealtyService{
         return null;
     }
     @Override
-    public String saveRealty(RealtyDto realtyDto,String username) {
+    public String saveRealty(RealtyDto realtyDto,String username) throws Exception{
         try{
             Realty realty = realtyDto.toEntity();//애초에 Entity로 만들어놓고 Entity setter를 이용해 넣기
             User user = userRepository.findByUsername(username).get();//user객체 갖고오기
@@ -73,25 +93,12 @@ public class RealtyServiceImpl implements RealtyService{
 //            for(int i=0;i<segwonValues.size();i++){//땡세권 받아오기
 //                segwons.add(Segwon.values()[segwonValues.get(i).intValue()]);
 //            }
-            StringTokenizer tk = new StringTokenizer(dongstr);
-            for(int i=0;i<3;i++){
-                dongValues.add(tk.nextToken());//0:서울시 1:성동구 2:응봉동
+            Dong dong = checkValidDong(dongstr,dongValues);
+            if(ObjectUtils.isEmpty(dong)) { //비어있다면 exception으로 끊어버리기
+                throw new Exception();
             }
-
-            List<Dong> dong = dongRepository.findAllByDongName(dongValues.get(2));
-            //dong객체로 sidoName,gugunName과 동일하면 realty객체에 Dong객체를 넣어줘라.
-            for(int i=0;i<dong.size();i++){
-                Dong ddong = dong.get(i);
-                String sidoName = ddong.getSidoName();
-                String gugunName = ddong.getGugunName();
-                if(sidoName.equals(dongValues.get(0))&&gugunName.equals(dongValues.get(1))){
-                    realty.setDong(ddong);
-                    break;
-                }
-            }
-//            for(){
-//
-//            }
+            realty.setDong(dong);
+            
             realty.setOptions(options);
             realty.setSegwons(segwons);
             realty.setRealtyType(realtyType);
@@ -100,16 +107,81 @@ public class RealtyServiceImpl implements RealtyService{
             realty.setRegisterer(user);
             realtyRepository.save(realty); //dto에서는 service, repository layer에선 entity객체가 들어간다. 없으면 null이 들어감.
         }catch (Exception e){
-            throw e;
+                throw e;
         }
         return "sucess";
     }
+
     //id를 갖고 entity를 갖고와서 새로들어온 dto와 비교해서 바꿔주고, update가 아닌 save를 다시 해준다.
     @Override
-    public RealtyDto updatePost(RealtyDto realtyDto) {
-//        Realty realty = realtyRepository.findById(realtyDto.getRealtyId()).get();
-//        realty =realty.updateRealty(realtyDto.toEntity());
-        return null;
+    public RealtyResponseDto updateRealty(RealtyDto realtyDto) throws Exception{
+        Realty realty = realtyRepository.findById(realtyDto.getRealtyId()).get(); //기존의 realty
+        //realty.getasd() != realtyDto.toEntity();가 라면 realty.set()
+        RealtyDto check_realty = realtyDto;//새로 들어온 realtyDto
+        
+        String check_str = check_realty.getDongstr();//Dong 객체
+        List<String> dongValues = new ArrayList<>();
+        Dong dong = checkValidDong(check_str,dongValues);
+        if(ObjectUtils.isEmpty(dong)) { //비어있다면 exception,즉 말이 안되는 주소라면
+                throw new Exception();
+        }
+        //Dong
+        if(!realty.getDong().getSidoName().equals(dongValues.get(0))){
+            realty.getDong().setSidoName(dongValues.get(0));
+        }
+        if(!realty.getDong().getGugunName().equals(dongValues.get(1))){
+            realty.getDong().setGugunName(dongValues.get(1));
+        }
+        if(!realty.getDong().getDongName().equals(dongValues.get(2))){
+            realty.getDong().setDongName(dongValues.get(2));
+        }
+        if(!realty.getAddress().equals(check_realty.getAddress())){
+            realty.setAddress(check_realty.getAddress());
+        }
+        if(!realty.getHeat().equals(check_realty.getHeat())){
+            realty.setHeat(check_realty.getHeat());
+        }
+        if(realty.getSize()!=check_realty.getSize()){
+            realty.setSize(check_realty.getSize());
+        }
+        if(realty.getRooms()!=check_realty.getRooms()){
+            realty.setRooms(check_realty.getRooms());
+        }
+        if(realty.getBathrooms()!=check_realty.getBathrooms()){
+            realty.setBathrooms(check_realty.getBathrooms());
+        }
+        if(realty.getElevators()!=check_realty.getElevators()){
+            realty.setElevators(check_realty.getElevators());
+        }
+        if(realty.getPrice()!=check_realty.getPrice()){
+            realty.setPrice(check_realty.getPrice());
+        }
+        if(!realty.getDescription().equals(check_realty.getDescription())){
+            realty.setDescription(check_realty.getDescription());
+        }
+        //옵션 비교
+        List<Long> optionValues = realtyDto.getOptions();
+        List<Option> options = new ArrayList<>();
+        for(int i=0;i<optionValues.size();i++){
+            options.add(Option.values()[optionValues.get(i).intValue()]);
+        }
+        if(!Arrays.equals(realty.getOptions().toArray(),options.toArray())){
+            realty.setOptions(options);
+        }
+        RealtyType rType = RealtyType.values()[check_realty.getRealtyType().intValue()];
+        if(realty.getRealtyType()!=rType){
+            realty.setRealtyType(rType);
+        }
+        ContractType cType = ContractType.values()[check_realty.getContractType().intValue()];
+        if(realty.getContractType()!=cType){
+            realty.setContractType(cType);
+        }
+        ContractProcess cpType = ContractProcess.values()[check_realty.getContractProcess().intValue()];
+        if(realty.getContractProcess()!=cpType){
+            realty.setContractProcess(cpType);
+        }
+        realtyRepository.save(realty);
+        return getRealty(realtyDto.getRealtyId());
     }
 
     @Override
@@ -158,6 +230,11 @@ public class RealtyServiceImpl implements RealtyService{
                 .gugunName(dong.getGugunName())
                 .sidoName(dong.getSidoName())
                 .build();
+    }
+
+    @Override
+    public List<RealtyResponseDto> getRealtyList() {
+        return null;
     }
 
     @Override

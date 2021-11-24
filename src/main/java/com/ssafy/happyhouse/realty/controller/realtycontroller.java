@@ -41,19 +41,26 @@ public class realtycontroller {
         String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
         DecodedJWT decodedJWT = JWT.decode(token);//디코딩
         String username = decodedJWT.getSubject();//이름 뽑아오기
-
-        realtyService.saveRealty(realtyDto,username);
+        try{
+            realtyService.saveRealty(realtyDto,username);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //수정, 매물id와 realtyDto, id로 realty(이미 등록된 애) -> 바뀐걸 체크해주고 -> save()
-//    @PutMapping("/{realty-id}")
-//    public ResponseEntity<RealtyDto> updateRealty(@PathVariable(name="realty-id") Long realtyId,@RequestBody RealtyDto realtyDto){
-//        RealtyDto realtyDto1;
-//        realtyDto.setRealtyId(realtyId);
-//        realtyDto1 = realtyService.updateRealty(realtyDto);
-//        return new ResponseEntity<>(realtyDto1, HttpMethod.OK);
-//    }
+    @PutMapping("/{realty-id}")
+    public ResponseEntity<RealtyResponseDto> updateRealty(@PathVariable(name="realty-id") Long realtyId,@RequestBody RealtyDto realtyDto){
+        realtyDto.setRealtyId(realtyId);//어떤 애인지 아이디를 Dto에 박아버림
+        RealtyResponseDto realtyResponseDto = null;
+        try{
+            realtyResponseDto = realtyService.updateRealty(realtyDto);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(realtyResponseDto, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/upload",method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Void> uploadImage(@ModelAttribute List<MultipartFile> files){
@@ -84,7 +91,7 @@ public class realtycontroller {
 
     //해당 지역 추천 매물 뿌려주기(조회순 및 라이크 순)
     //토큰이있다면 username으로 user찾아서 interestdistrict 1번 찾아서 dong으로 realty 찾아서 보내주던데
-    @GetMapping(name = "/recommend")
+    @GetMapping(path = "/recommend")
     public ResponseEntity<List<RealtyDto>> getRecommendedRealty(){
         return new ResponseEntity<>(HttpStatus.OK);
     }
