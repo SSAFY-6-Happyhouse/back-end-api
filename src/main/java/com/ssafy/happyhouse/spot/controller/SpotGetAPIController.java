@@ -38,7 +38,7 @@ public class SpotGetAPIController {
 
     private final SpotService spotService;
 
-    public SearchSpotCategoryResMain searchSpot(SearchSpotCategoryReq searchSpotCategoryReq){
+    public SearchSpotCategoryResMain searchSpot(SearchSpotCategoryReq searchSpotCategoryReq) throws Exception{
 
         URI uri= UriComponentsBuilder.fromUriString(kakaoCategorySearchUrl)
                 .queryParams(searchSpotCategoryReq.toMultiValueMap())

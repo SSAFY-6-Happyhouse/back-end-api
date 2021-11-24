@@ -1,5 +1,7 @@
 package com.ssafy.happyhouse.spot.service;
 
+import com.ssafy.happyhouse.district.entity.Dong;
+import com.ssafy.happyhouse.district.repository.DongRepository;
 import com.ssafy.happyhouse.spot.dto.SearchSpotCategoryRes;
 import com.ssafy.happyhouse.spot.dto.SpotDto;
 import com.ssafy.happyhouse.spot.entity.Direction;
@@ -14,6 +16,7 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -31,15 +34,20 @@ public class SpotServiceImpl implements SpotService{
 
     private final EntityManager entityManager;
 
-    //private final DongRepository dongRepository;
+    private final DongRepository dongRepository;
 
     //private final ModelMapper modelMapper;
 
     @Override
-    public void saveSpot(SearchSpotCategoryRes searchSpotCategoryRes) throws ParseException {
+    public void saveSpot(SearchSpotCategoryRes searchSpotCategoryRes) throws Exception {
         //동구하기
-        String[] str=searchSpotCategoryRes.getAddressName().split(" ");
-        //Dong dong = dongRepository.findByDongName(str[2]);
+        String[] str = searchSpotCategoryRes.getAddressName().split(" ");
+        Dong dong=null;
+        if(str.length==4){
+            dong = dongRepository.findByDongNameAndGugunName(str[2], str[1]);
+        }else if(str.length==5){
+            dong = dongRepository.findByDongNameAndGugunName(str[3], str[2]);
+        }
 
 
         String pointWKT = String.format("POINT(%s %s)",searchSpotCategoryRes.getX(),searchSpotCategoryRes.getY());
@@ -49,7 +57,7 @@ public class SpotServiceImpl implements SpotService{
                         .categoryCode(searchSpotCategoryRes.getCategoryGroupCode())
                 .categoryName(searchSpotCategoryRes.getCategoryGroupName())
                 .spotName(searchSpotCategoryRes.getPlaceName())
-                .dong(null)
+                .dong(dong)
                 .address(searchSpotCategoryRes.getAddressName())
                 .spotPoint(point)
                 .x(searchSpotCategoryRes.getX())
@@ -57,23 +65,11 @@ public class SpotServiceImpl implements SpotService{
                 .build());
 
 
-
-//        return SpotDto.builder().categoryCode(spot.getCategoryCode())
-//                .categoryName(searchSpotCategoryRes.getCategoryGroupName())
-//                .spotName(searchSpotCategoryRes.getCategoryName())
-//                .dong(tempdong)
-//                .address(searchSpotCategoryRes.getAddressName())
-//                .spotPoint(new Point(((Double)searchSpotCategoryRes.getX()).intValue(),((Double)searchSpotCategoryRes.getY()).intValue()))
-//                .x(searchSpotCategoryRes.getX())
-//                .y(searchSpotCategoryRes.getY()).build();
     }
 
     @Override
-    public List<SpotDto> getSpotList(List<SpotKeyword> segwons) {
+    public List<SpotDto> getSpotList(List<SpotKeyword> segwons) throws Exception {
         List<SpotDto> list=new ArrayList<>();
-//        segwons=new ArrayList<>();
-//        segwons.add(SpotKeyword.AT4);
-//        segwons.add(SpotKeyword)
         for(SpotKeyword spot : segwons) {
             Spot category=spotRepository.findByCategoryCode(spot);
             //list.add(modelMapper.map(category,SpotDto.class));
@@ -92,7 +88,7 @@ public class SpotServiceImpl implements SpotService{
     }
 
     @Override
-    public SpotDto getSpot(Long spotId) {
+    public SpotDto getSpot(Long spotId)  throws Exception{
         Spot res=spotRepository.findById(spotId).get(); //여기서 에러 ( Spot 에 constructor 안해서 에러)
 
         return SpotDto.builder()
@@ -107,23 +103,20 @@ public class SpotServiceImpl implements SpotService{
                 .build();
     }
 
-
-
     @Override
-    public SpotDto updateSpot(SpotDto spotDto) {
+    public SpotDto updateSpot(SpotDto spotDto) throws Exception {
         return null;
     }
 
-
     @Override
-    public void deleteSpot(Long spotId) {
+    public void deleteSpot(Long spotId) throws Exception {
 
     }
 
     @Override
-    public List<Segwon> getSegwonList(org.springframework.data.geo.Point point) throws ParseException {
-        double baseLatitude= point.getY();
-        double baseLongitude = point.getX();
+    public List<Segwon> getSegwonList(double x, double y) throws Exception {
+        double baseLatitude= y;
+        double baseLongitude = x;
         double distance = 0.5;
 
         // 북동쪽 좌표 구하기
