@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class InterestDistrictDto {
     private User user;
     private Dong dong;

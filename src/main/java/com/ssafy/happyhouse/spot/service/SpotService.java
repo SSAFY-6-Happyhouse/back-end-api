@@ -14,10 +14,10 @@ import java.util.Optional;
 
 
 public interface SpotService {
-    public void saveSpot(SearchSpotCategoryRes searchSpotCategoryRes) throws ParseException;
-    public List<SpotDto> getSpotList(List<SpotKeyword> segwons);
-    public SpotDto getSpot(Long spotId);
-    public SpotDto updateSpot(SpotDto spotDto);
-    public void deleteSpot(Long spotId);
-    public List<Segwon> getSegwonList(Point point) throws ParseException;
+    public void saveSpot(SearchSpotCategoryRes searchSpotCategoryRes) throws Exception;
+    public List<SpotDto> getSpotList(List<SpotKeyword> segwons) throws Exception;
+    public SpotDto getSpot(Long spotId) throws Exception;
+    public SpotDto updateSpot(SpotDto spotDto) throws Exception;
+    public void deleteSpot(Long spotId) throws Exception;
+    public List<Segwon> getSegwonList(double x, double y) throws Exception;
 }
