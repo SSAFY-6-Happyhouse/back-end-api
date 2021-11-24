@@ -18,6 +18,6 @@ public interface SpotService {
     public List<SpotDto> getSpotList(List<SpotKeyword> segwons) throws Exception;
     public SpotDto getSpot(Long spotId) throws Exception;
     public SpotDto updateSpot(SpotDto spotDto) throws Exception;
-    public void deleteSpot(Long spotId) throws Exception;
+    public void deleteSpot() throws Exception;
     public List<Segwon> getSegwonList(double x, double y) throws Exception;
 }
