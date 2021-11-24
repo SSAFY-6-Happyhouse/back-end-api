@@ -10,14 +10,14 @@ spring:
     url: jdbc:mysql://${spring.datasource.env}:3306/happyhouse?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
     username: ssafy
     password: ssafy
-    env: 15.164.229.190
+    env: 3.37.1.251
   jpa:
     hibernate:
       ddl-auto: update
     defer-datasource-initialization: true
 
 server:
-  port: 8081
+  port: 8080
 
 kakao:
   url:
