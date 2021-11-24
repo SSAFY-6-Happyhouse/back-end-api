@@ -3,8 +3,11 @@ package com.ssafy.happyhouse.realty.controller;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ssafy.happyhouse.realty.entity.Realty;
+import com.ssafy.happyhouse.realty.entity.RealtyPicture;
 import com.ssafy.happyhouse.realty.model.RealtyDto;
+import com.ssafy.happyhouse.realty.model.RealtyPicturesDto;
 import com.ssafy.happyhouse.realty.service.RealtyService;
+import com.ssafy.happyhouse.realty.utils.MD5Generator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -12,8 +15,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
@@ -26,14 +35,33 @@ public class realtycontroller {
     //등록 , dong_id와 realty_point
     @PostMapping
     public ResponseEntity<String> createRealty(@RequestBody RealtyDto realtyDto //매물 등록 내용
-                                               ,@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken
-    ){
+                                               , @RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken
+                                               , @RequestParam("file") MultipartFile files
+                                               ) throws IOException, NoSuchAlgorithmException {
+
         //토큰에서 등록자 name뽑기
         String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
         DecodedJWT decodedJWT = JWT.decode(token);//디코딩
         String username = decodedJWT.getSubject();//이름 뽑아오기
+        //picture
+        String origin = files.getOriginalFilename();
+        String filename = new MD5Generator(origin).toString();
+        String savePath = System.getProperty("user.dir")+"\\files";
+        if(!new File(savePath).exists()){
+            try{
+                new File(savePath).mkdir();
+            }catch(Exception e){
+                e.getStackTrace();
+            }
+        }
+        String filePath = savePath + "\\" + filename;
+        files.transferTo(new File(filePath));
+        RealtyPicturesDto realtyPicturesDto = new RealtyPicturesDto();
+        realtyPicturesDto.setOrigFilename(origin);
+        realtyPicturesDto.setFileName(filename);
+        realtyPicturesDto.setLocation(filePath);
+        
 
-        log.info(realtyDto.toString());
         realtyService.saveRealty(realtyDto,username);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -69,5 +97,4 @@ public class realtycontroller {
         return new ResponseEntity<>(realtyService.getRealty(realtyId),HttpStatus.OK);
     }
 
-    //추천 검색어??
 }
