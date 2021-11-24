@@ -105,10 +105,12 @@ public class RealtyServiceImpl implements RealtyService{
     @Override
     public RealtyResponseDto getRealty(Long realtyId) {//상세조회 ,
         Realty realty = realtyRepository.findById(realtyId).get();
+//        List<RealtyPicture> realtyPicture = realty.getRealtyPictures();
         realty.setHitCount(realty.getHitCount()+1);
         realty = realtyRepository.save(realty);//업데이트 된 상태
         User user = userRepository.findById(realty.getRegisterer().getUserId()).get();
         Dong dong = dongRepository.findById(realty.getDong().getDongId()).get();//Dong객체 갖고 오기
+
         //세권 정보, 옵션 정보, 관심
 //        List<Segwon> segwons = realty.getSegwons();
         List<Option> options = realty.getOptions();

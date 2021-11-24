@@ -48,7 +48,7 @@ public class realtycontroller {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //수정
+    //수정, 매물id와 realtyDto, id로 realty(이미 등록된 애) -> 바뀐걸 체크해주고 -> save()
 //    @PutMapping("/{realty-id}")
 //    public ResponseEntity<RealtyDto> updateRealty(@PathVariable(name="realty-id") Long realtyId,@RequestBody RealtyDto realtyDto){
 //        RealtyDto realtyDto1;
