@@ -1,7 +1,9 @@
 package com.ssafy.happyhouse.realty.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -9,6 +11,8 @@ import javax.persistence.*;
 @Table(name = "REALTY_PICTURES")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RealtyPicture {
     @Id
     @Column(name = "PICTURE_ID")
@@ -17,6 +21,9 @@ public class RealtyPicture {
 
     @Column(name = "LOCATION")
     private String location;
+
+    @Column(name = "SIZE")
+    private Long size;
 
     @ManyToOne
     @JoinColumn(name = "REALTY_ID")
