@@ -16,5 +16,6 @@ public interface RealtyService {
     public void deleteRealty(Long realtyId);
     public List<Marker> getRealtyMarkers();
     public RealtyResponseDto getRealty(Long realtyId);
+    public List<Marker> getRecommendedMarkers(String username);
     public List<RealtyDto> getRealtyList();
 }

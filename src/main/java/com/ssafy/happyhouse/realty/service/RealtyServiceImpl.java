@@ -4,15 +4,13 @@ import com.ssafy.happyhouse.district.entity.Dong;
 import com.ssafy.happyhouse.district.repository.DongRepository;
 import com.ssafy.happyhouse.enquiry.entity.Enquiry;
 import com.ssafy.happyhouse.realty.entity.*;
-import com.ssafy.happyhouse.realty.model.Marker;
-import com.ssafy.happyhouse.realty.model.RealtyDto;
-import com.ssafy.happyhouse.realty.model.RealtyPicturesDto;
-import com.ssafy.happyhouse.realty.model.RealtyResponseDto;
+import com.ssafy.happyhouse.realty.model.*;
 import com.ssafy.happyhouse.realty.repository.RealtyPictureRepository;
 import com.ssafy.happyhouse.realty.repository.RealtyRepository;
 import com.ssafy.happyhouse.spot.entity.Segwon;
 import com.ssafy.happyhouse.user.entity.User;
 import com.ssafy.happyhouse.user.repository.UserRepository;
+import com.ssafy.happyhouse.util.api.KakaoMap;
 import com.ssafy.happyhouse.util.file.FileHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +36,7 @@ public class RealtyServiceImpl implements RealtyService{
     private final FileHandler fileHandler;
 //    private final ModelMapper modelMapper;
     private final ModelMapper modelMapper;
+    private final KakaoMap kakaoMap;
     //정석은 controller - service - servicimpl = 권한문제 발생할 수 있으므로
 
     @Override
@@ -98,6 +97,9 @@ public class RealtyServiceImpl implements RealtyService{
             realty.setContractProcess(contractProcess);
             realty.setContractType(contractType);
             realty.setRegisterer(user);
+
+            Coordinate coordinate = kakaoMap.getCoordinatesFromAddress(realtyDto.getDongstr(),realtyDto.getAddress());
+
             realtyRepository.save(realty); //dto에서는 service, repository layer에선 entity객체가 들어간다. 없으면 null이 들어감.
         }catch (Exception e){
             throw e;
@@ -156,6 +158,23 @@ public class RealtyServiceImpl implements RealtyService{
                 .gugunName(dong.getGugunName())
                 .sidoName(dong.getSidoName())
                 .build();
+    }
+
+    @Override
+    public List<Marker> getRecommendedMarkers(String username) {
+        User user = userRepository.findByUsername(username).get();
+
+        Dong interestedDong = user.getInterestDistricts().get(0).getDong();
+
+        List<Realty> realties = realtyRepository.findAllByDongOrderByHitCount(interestedDong);
+
+        return realties.stream().limit(5).map(realty ->
+                Marker.builder()
+                        .imgPath(realty.getRealtyPictures().get(0).getLocation())
+                        .price(realty.getPrice())
+                        .contractType(realty.getContractType())
+                        .realtyType(realty.getRealtyType())
+                        .build()).collect(Collectors.toList());
     }
 
     @Override
