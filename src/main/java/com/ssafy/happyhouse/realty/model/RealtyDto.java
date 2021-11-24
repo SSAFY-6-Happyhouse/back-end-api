@@ -5,6 +5,7 @@ import com.ssafy.happyhouse.realty.entity.*;
 import com.ssafy.happyhouse.user.entity.User;
 import lombok.Data;
 import org.springframework.data.geo.Point;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -22,6 +23,7 @@ public class RealtyDto {
     private Integer bathrooms;
     private Integer elevators;
     private Long price;
+    private List<MultipartFile> files;
 //    private LocalTime localTime;//contact-time,연락 가능 시간
     private String description;
     private Long likes;
