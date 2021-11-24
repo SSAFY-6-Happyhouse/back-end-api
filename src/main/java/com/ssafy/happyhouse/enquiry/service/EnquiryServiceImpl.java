@@ -20,7 +20,7 @@ public class EnquiryServiceImpl implements EnquiryService {
     private final UserRepository userRepository;
 
     @Override
-    public EnquiryDto getEnquiryByRealtyId(Long realtyId) {
+    public EnquiryDto getEnquiryByRealtyId(Long realtyId) throws Exception{
         Realty realty = realtyRepository.findById(realtyId).get();
         Enquiry enquiry = enquiryRepository.findByRealty(realty).get();
 
@@ -33,7 +33,7 @@ public class EnquiryServiceImpl implements EnquiryService {
     }
 
     @Override
-    public EnquiryDto saveEnquiry(String username, Long realtyId) {
+    public EnquiryDto saveEnquiry(String username, Long realtyId) throws Exception{
         // 유저, 매물정보, 전화번호 (명령형식의 코드 작성은 메모리 효율성이 떨어질 수 있다)
         User user = userRepository.findByUsername(username).get();
         Realty realty = realtyRepository.findById(realtyId).get();
@@ -45,5 +45,6 @@ public class EnquiryServiceImpl implements EnquiryService {
         return EnquiryDto.builder().enquiryId(enquiry.getEnquiryId())
                 .realtyProviderPhone(enquiry.getRealtyProviderPhone())
                 .build();
+
     }
 }

@@ -1,5 +1,6 @@
 package com.ssafy.happyhouse.realty.model;
 
+import com.ssafy.happyhouse.realty.entity.Realty;
 import com.ssafy.happyhouse.realty.entity.RealtyPicture;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RealtyPicturesDto {
-    private RealtyDto realtyDto;
-    private List<RealtyPicture> realtyPictures;
-
-
+    private String fileName;
+    private String origFilename;
+    private String location;
+    private Long realty_id;
+    public RealtyPicture toEntity(){
+        return RealtyPicture.builder().location(location).build();
+    }
 }

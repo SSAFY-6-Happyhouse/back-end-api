@@ -28,7 +28,7 @@ public class RealtyDto {
     private Long hitCount;
     private List<Long> options;
     private List<Long> interests;  //관심매물은 등록할 때 필요가 없음
-    private List<Long> segwons;
+//    private List<Long> segwons; //segwon에게 point를 보내주면 그 포인트를 어떤 세권인지 판단해서 보내주면,어떤 땡세권인지를 save하면 됐음. 검색할때만 segwon을 받아야함.
 //    private LocalDateTime registerDate;
     
     //토큰을 통해 username을 받아와서 user에 setting 해줌.
