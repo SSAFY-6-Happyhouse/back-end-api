@@ -1,15 +1,20 @@
 package com.ssafy.happyhouse.spot.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.happyhouse.district.entity.Dong;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Point;
 
 import javax.persistence.*;
-import java.awt.*;
-import java.awt.geom.Point2D;
+
 
 @Entity
 @Table(name = "SPOTS")
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
 public class Spot {
@@ -31,6 +36,7 @@ public class Spot {
     private String spotName;
 
     //동
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "DONG_ID")
     private Dong dong;
@@ -42,7 +48,7 @@ public class Spot {
     //좌표
     @Column(name = "SPOT_POINT") //공간검색이좋다.
     private Point spotPoint; // Point 객체 안에 x,y가 있음
-    //private Point2D spotPoint;
+
 
     //좌표
     @Column(name = "SPOT_X")

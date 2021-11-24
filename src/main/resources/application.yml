@@ -12,6 +12,7 @@ spring:
     password: ssafy
     env: 3.37.1.251
   jpa:
+    database-platform: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect
     hibernate:
       ddl-auto: update
     defer-datasource-initialization: true
