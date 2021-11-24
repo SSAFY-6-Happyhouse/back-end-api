@@ -6,6 +6,7 @@ import com.ssafy.happyhouse.realty.entity.Realty;
 import com.ssafy.happyhouse.realty.entity.RealtyPicture;
 import com.ssafy.happyhouse.realty.model.RealtyDto;
 import com.ssafy.happyhouse.realty.model.RealtyPicturesDto;
+import com.ssafy.happyhouse.realty.model.RealtyResponseDto;
 import com.ssafy.happyhouse.realty.service.RealtyService;
 import com.ssafy.happyhouse.realty.utils.MD5Generator;
 import lombok.RequiredArgsConstructor;
@@ -36,31 +37,12 @@ public class realtycontroller {
     @PostMapping
     public ResponseEntity<String> createRealty(@RequestBody RealtyDto realtyDto //매물 등록 내용
                                                , @RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken
-                                               , @RequestParam("file") MultipartFile files
                                                ) throws IOException, NoSuchAlgorithmException {
 
         //토큰에서 등록자 name뽑기
         String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
         DecodedJWT decodedJWT = JWT.decode(token);//디코딩
         String username = decodedJWT.getSubject();//이름 뽑아오기
-        //picture
-        String origin = files.getOriginalFilename();
-        String filename = new MD5Generator(origin).toString();
-        String savePath = System.getProperty("user.dir")+"\\files";
-        if(!new File(savePath).exists()){
-            try{
-                new File(savePath).mkdir();
-            }catch(Exception e){
-                e.getStackTrace();
-            }
-        }
-        String filePath = savePath + "\\" + filename;
-        files.transferTo(new File(filePath));
-        RealtyPicturesDto realtyPicturesDto = new RealtyPicturesDto();
-        realtyPicturesDto.setOrigFilename(origin);
-        realtyPicturesDto.setFileName(filename);
-        realtyPicturesDto.setLocation(filePath);
-        
 
         realtyService.saveRealty(realtyDto,username);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -93,7 +75,7 @@ public class realtycontroller {
 
     //상세 조회
     @GetMapping(path = "/{realty-id}")
-    public ResponseEntity<RealtyDto> getRealty(@PathVariable(name = "realty-id") Long realtyId){
+    public ResponseEntity<RealtyResponseDto> getRealty(@PathVariable(name = "realty-id") Long realtyId){
         return new ResponseEntity<>(realtyService.getRealty(realtyId),HttpStatus.OK);
     }
 
