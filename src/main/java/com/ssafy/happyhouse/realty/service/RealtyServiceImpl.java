@@ -159,6 +159,11 @@ public class RealtyServiceImpl implements RealtyService{
     }
 
     @Override
+    public List<RealtyDto> getRealtyList() {
+        return null;
+    }
+
+    @Override
     public List<Marker> getRealtyMarkers() {
         List<Realty> realties = realtyRepository.findAll();
         //좌표에 맞게 search 해주기

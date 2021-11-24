@@ -28,11 +28,11 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	/*implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	annotationProcessor(
 			"javax.persistence:javax.persistence-api",
 			"javax.annotation:javax.annotation-api",
-			"com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+			"com.querydsl:querydsl-apt:${queryDslVersion}:jpa")*/
 
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.2'
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version:  '2.9.2'

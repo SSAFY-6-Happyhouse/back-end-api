@@ -84,11 +84,11 @@ public class realtycontroller {
 
     //해당 지역 추천 매물 뿌려주기(조회순 및 라이크 순)
     //토큰이있다면 username으로 user찾아서 interestdistrict 1번 찾아서 dong으로 realty 찾아서 보내주던데
-    @GetMapping(name = "/recommend")
+   /* @GetMapping(name = "/recommend")
     public ResponseEntity<List<RealtyDto>> getRecommendedRealty(){
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
+*/
     //상세 조회
     @GetMapping(path = "/{realty-id}")
     public ResponseEntity<RealtyResponseDto> getRealty(@PathVariable(name = "realty-id") Long realtyId){
