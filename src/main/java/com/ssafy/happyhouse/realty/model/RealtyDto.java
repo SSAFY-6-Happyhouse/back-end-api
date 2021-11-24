@@ -15,7 +15,7 @@ import java.util.List;
 public class RealtyDto {
     private Long realtyId;//매물아이디
 //    private LocalDateTime availableDate;//입주가능일
-    private String dong;//동 -> 문자열로 받고, Dong형으로 변경 후 Entity에 set해주자.
+    private String dongstr;//동 -> 문자열로 받고, Dong형으로 변경 후 Entity에 set해주자.
     private String address;//주소
     private String heat;
     private Double size;

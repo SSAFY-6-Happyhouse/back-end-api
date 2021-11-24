@@ -7,6 +7,7 @@ import com.ssafy.happyhouse.realty.entity.RealtyPicture;
 import com.ssafy.happyhouse.realty.model.Marker;
 import com.ssafy.happyhouse.realty.model.RealtyDto;
 import com.ssafy.happyhouse.realty.model.RealtyPicturesDto;
+import com.ssafy.happyhouse.realty.model.RealtyResponseDto;
 import com.ssafy.happyhouse.realty.service.RealtyService;
 import com.ssafy.happyhouse.realty.utils.MD5Generator;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +41,6 @@ public class realtycontroller {
         String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
         DecodedJWT decodedJWT = JWT.decode(token);//디코딩
         String username = decodedJWT.getSubject();//이름 뽑아오기
-
-        if(CollectionUtils.isEmpty(realtyDto.getFiles())){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
 
         realtyService.saveRealty(realtyDto,username);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -94,7 +91,7 @@ public class realtycontroller {
 
     //상세 조회
     @GetMapping(path = "/{realty-id}")
-    public ResponseEntity<RealtyDto> getRealty(@PathVariable(name = "realty-id") Long realtyId){
+    public ResponseEntity<RealtyResponseDto> getRealty(@PathVariable(name = "realty-id") Long realtyId){
         return new ResponseEntity<>(realtyService.getRealty(realtyId),HttpStatus.OK);
     }
 
