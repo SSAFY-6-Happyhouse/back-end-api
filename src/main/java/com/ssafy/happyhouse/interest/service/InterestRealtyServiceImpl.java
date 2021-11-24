@@ -41,4 +41,5 @@ public class InterestRealtyServiceImpl implements InterestRealtyService{
     public void deleteInterestRealty(String username, Long realtyId) throws Exception{
 
     }
+
 }

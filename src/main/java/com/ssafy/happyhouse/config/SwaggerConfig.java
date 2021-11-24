@@ -17,10 +17,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.ArrayList;
 import java.util.List;
 
-/*@Configuration
-@EnableSwagger2*/
+
+@EnableSwagger2
 public class SwaggerConfig {
-    /*private static final String API_NAME = "광주 6반 Happyhouse Final";
+    private static final String API_NAME = "광주 6반 Happyhouse Final";
     private static final String API_VERSION = "0.0.1";
     private static final String API_DESCRIPTION = "광주 6반 Happyhouse 이재권, 오현지, 최범규, 이정은, 김동익, 박재현";
 
@@ -41,5 +41,5 @@ public class SwaggerConfig {
                 .version(API_VERSION)
                 .description(API_DESCRIPTION)
                 .build();
-    }*/
+    }
 }

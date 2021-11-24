@@ -1,5 +1,8 @@
 package com.ssafy.happyhouse.realty.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum Option {
     AIRCONDITIONER,
     REFRIGERATOR,
