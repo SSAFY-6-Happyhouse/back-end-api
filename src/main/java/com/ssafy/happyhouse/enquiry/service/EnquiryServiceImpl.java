@@ -45,5 +45,6 @@ public class EnquiryServiceImpl implements EnquiryService {
         return EnquiryDto.builder().enquiryId(enquiry.getEnquiryId())
                 .realtyProviderPhone(enquiry.getRealtyProviderPhone())
                 .build();
+
     }
 }
