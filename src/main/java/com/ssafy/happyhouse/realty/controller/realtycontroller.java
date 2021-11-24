@@ -23,19 +23,16 @@ import java.util.List;
 public class realtycontroller {
     private final RealtyService realtyService;
     // RequestParam으로 문자열 받을 것, PathVariable은 숫자 등, get할때만사용 => body가 없으므로
-    //등록
+    //등록 , dong_id와 realty_point
     @PostMapping
     public ResponseEntity<String> createRealty(@RequestBody RealtyDto realtyDto //매물 등록 내용
                                                ,@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken
-    ){//registerer확인용
+    ){
         //토큰에서 등록자 name뽑기
         String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
         DecodedJWT decodedJWT = JWT.decode(token);//디코딩
         String username = decodedJWT.getSubject();//이름 뽑아오기
-//        //동네 이름, StringTokenizer로
 
-        //
-//        String username ="";
         log.info(realtyDto.toString());
         realtyService.saveRealty(realtyDto,username);
         return new ResponseEntity<>(HttpStatus.CREATED);
