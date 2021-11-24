@@ -1,4 +1,7 @@
 package com.ssafy.happyhouse.interest.repository;
 
-public interface InterestDistrictRepository {
+import com.ssafy.happyhouse.interest.entity.InterestDistrict;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface InterestDistrictRepository extends JpaRepository<InterestDistrict, Long> {
 }

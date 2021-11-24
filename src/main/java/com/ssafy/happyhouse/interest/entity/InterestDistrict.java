@@ -5,11 +5,19 @@ import com.ssafy.happyhouse.district.entity.Dong;
 import com.ssafy.happyhouse.district.entity.Gugun;
 import com.ssafy.happyhouse.district.entity.Sido;
 import com.ssafy.happyhouse.user.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "INTEREST_DISTRICT")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class InterestDistrict {
 
     @Id
