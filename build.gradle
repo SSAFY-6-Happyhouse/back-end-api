@@ -42,13 +42,13 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 }
 
-/*sourceSets{
+sourceSets{
 	main{
 		java{
 			srcDirs=["$projectDir/src/main/java","$projectDir/build/generated"]
 		}
 	}
-}*/
+}
 test {
 	useJUnitPlatform()
 }

@@ -119,7 +119,10 @@ public class Realty {
     private List<RealtyPicture> realtyPictures = new ArrayList<>();
 
     //좌표
-    @Column(name = "REALTY_POINT")
-    private Point realtyPoint;
+    @Column(name = "LATITUDE")
+    private Double latitude;
+
+    @Column(name = "LONGITUDE")
+    private Double longitude;
 
 }

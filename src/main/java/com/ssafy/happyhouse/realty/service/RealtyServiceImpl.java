@@ -2,22 +2,30 @@ package com.ssafy.happyhouse.realty.service;
 
 import com.ssafy.happyhouse.district.entity.Dong;
 import com.ssafy.happyhouse.district.repository.DongRepository;
+import com.ssafy.happyhouse.enquiry.entity.Enquiry;
 import com.ssafy.happyhouse.realty.entity.*;
+import com.ssafy.happyhouse.realty.model.Marker;
 import com.ssafy.happyhouse.realty.model.RealtyDto;
 import com.ssafy.happyhouse.realty.model.RealtyPicturesDto;
+import com.ssafy.happyhouse.realty.model.RealtyResponseDto;
 import com.ssafy.happyhouse.realty.repository.RealtyPictureRepository;
 import com.ssafy.happyhouse.realty.repository.RealtyRepository;
 import com.ssafy.happyhouse.spot.entity.Segwon;
 import com.ssafy.happyhouse.user.entity.User;
 import com.ssafy.happyhouse.user.repository.UserRepository;
+import com.ssafy.happyhouse.util.file.FileHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +35,21 @@ public class RealtyServiceImpl implements RealtyService{
     private final UserRepository userRepository;
     private final DongRepository dongRepository;
     private final RealtyPictureRepository realtyPictureRepository;
+    private final FileHandler fileHandler;
 //    private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
     //정석은 controller - service - servicimpl = 권한문제 발생할 수 있으므로
 
+    @Override
+    public String saveImage(List<MultipartFile> multipartFile) throws Exception {
+        try{
+            fileHandler.parseFileInfo(multipartFile);
+        } catch (Exception e){
+            throw e;
+        }
+
+        return null;
+    }
     @Override
     public String saveRealty(RealtyDto realtyDto,String username) {
         try{
@@ -40,7 +60,7 @@ public class RealtyServiceImpl implements RealtyService{
             List<Long> optionValues = realtyDto.getOptions();
             List<Segwon> segwons = new ArrayList<>();
 //            List<Long> segwonValues = realtyDto.getSegwons(); -> dto에서 받는게 아닌,segwon에게 받아야한다.
-            String dongstr = realtyDto.getDong();//서울특별시 성동구 응봉동
+            String dongstr = realtyDto.getDongstr();//서울특별시 성동구 응봉동
             List<String> dongValues = new ArrayList<>();
 
             RealtyType realtyType = RealtyType.values()[realtyDto.getRealtyType().intValue()]; //매물 형태
@@ -78,8 +98,6 @@ public class RealtyServiceImpl implements RealtyService{
             realty.setContractProcess(contractProcess);
             realty.setContractType(contractType);
             realty.setRegisterer(user);
-
-
             realtyRepository.save(realty); //dto에서는 service, repository layer에선 entity객체가 들어간다. 없으면 null이 들어감.
         }catch (Exception e){
             throw e;
@@ -100,8 +118,44 @@ public class RealtyServiceImpl implements RealtyService{
     }
 
     @Override
-    public RealtyDto getRealty(Long realtyId) {
-        return null;
+    public RealtyResponseDto getRealty(Long realtyId) {//상세조회 ,
+        Realty realty = realtyRepository.findById(realtyId).get();
+        realty.setHitCount(realty.getHitCount()+1);
+        realty = realtyRepository.save(realty);//업데이트 된 상태
+        User user = userRepository.findById(realty.getRegisterer().getUserId()).get();
+        Dong dong = dongRepository.findById(realty.getDong().getDongId()).get();//Dong객체 갖고 오기
+        //세권 정보, 옵션 정보, 관심
+//        List<Segwon> segwons = realty.getSegwons();
+        List<Option> options = realty.getOptions();
+        List<RealtyPicture> realtyPictures = realty.getRealtyPictures();
+        List<Enquiry> enquiries = realty.getEnquiries();
+
+        return RealtyResponseDto.builder()
+                .address(realty.getAddress())
+                .username(user.getUsername()).
+                availableDate(realty.getAvailableDate())
+                .bathrooms(realty.getBathrooms())
+                .description(realty.getDescription())
+                .elevators(realty.getElevators())
+                .hitCount(realty.getHitCount())
+                .heat(realty.getHeat())
+                .price(realty.getPrice())
+                .contactTime(realty.getContactTime())
+                .rooms(realty.getRooms())
+                .registerer_id(realty.getRegisterer().getUserId())
+                .likes(realty.getLikes())
+                .registerDate(realty.getRegisterDate())
+                .size(realty.getSize())
+                .options(options)
+                .realtyPictures(realtyPictures)
+                .enquiries(enquiries)
+                .contractProcess(realty.getContractProcess())
+                .contractType(realty.getContractType())
+                .realtyType(realty.getRealtyType())
+                .dongName(dong.getDongName())
+                .gugunName(dong.getGugunName())
+                .sidoName(dong.getSidoName())
+                .build();
     }
 
     @Override
@@ -110,13 +164,19 @@ public class RealtyServiceImpl implements RealtyService{
     }
 
     @Override
-    public Long saveFile(RealtyPicturesDto realtyPictureDto) {
-        RealtyPicture realtyPicture = realtyPictureDto.toEntity();
-        return realtyPictureRepository.save(realtyPicture).getPictureId();
+    public List<Marker> getRealtyMarkers() {
+        List<Realty> realties = realtyRepository.findAll();
+        //좌표에 맞게 search 해주기
+
+        //좌표 같이 보내주기
+        return realties.stream().map(realty ->
+                Marker.builder()
+                        .realtyType(realty.getRealtyType())
+                        .contractType(realty.getContractType())
+                        .segwons(realty.getSegwons())
+                        .price(realty.getPrice())
+                        .build()).collect(Collectors.toList());
     }
 
-    @Override
-    public RealtyPicturesDto getFile(Long id) {
-        return null;
-    }
+
 }

@@ -4,7 +4,9 @@ import com.ssafy.happyhouse.district.entity.Dong;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DongRepository extends JpaRepository<Dong, Long> {
     List<Dong> findAllByDongName(String DongName);
+//    Optional<Dong> findByDongId(Long DongId);
 }
