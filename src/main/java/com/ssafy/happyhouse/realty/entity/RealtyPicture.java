@@ -1,9 +1,14 @@
 package com.ssafy.happyhouse.realty.entity;
 
+import lombok.Builder;
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "REALTY_PICTURES")
+@Data
+@Builder
 public class RealtyPicture {
     @Id
     @Column(name = "PICTURE_ID")
