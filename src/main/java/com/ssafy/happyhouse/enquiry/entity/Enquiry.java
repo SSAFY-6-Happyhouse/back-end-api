@@ -2,8 +2,10 @@ package com.ssafy.happyhouse.enquiry.entity;
 
 import com.ssafy.happyhouse.realty.entity.Realty;
 import com.ssafy.happyhouse.user.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -11,6 +13,8 @@ import javax.persistence.*;
 @Table(name = "ENQUIRIES")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Enquiry {
     @Id
     @Column(name = "ENQUIRY_ID")
