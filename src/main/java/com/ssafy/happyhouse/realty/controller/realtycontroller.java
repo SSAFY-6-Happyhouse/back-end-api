@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ssafy.happyhouse.realty.entity.Realty;
 import com.ssafy.happyhouse.realty.entity.RealtyPicture;
+import com.ssafy.happyhouse.realty.model.Marker;
 import com.ssafy.happyhouse.realty.model.RealtyDto;
 import com.ssafy.happyhouse.realty.model.RealtyPicturesDto;
 import com.ssafy.happyhouse.realty.model.RealtyResponseDto;
@@ -11,18 +12,14 @@ import com.ssafy.happyhouse.realty.service.RealtyService;
 import com.ssafy.happyhouse.realty.utils.MD5Generator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -32,6 +29,7 @@ import java.util.List;
 @Slf4j
 public class realtycontroller {
     private final RealtyService realtyService;
+
     // RequestParam으로 문자열 받을 것, PathVariable은 숫자 등, get할때만사용 => body가 없으므로
     //등록 , dong_id와 realty_point
     @PostMapping
@@ -57,6 +55,15 @@ public class realtycontroller {
 //        return new ResponseEntity<>(realtyDto1, HttpMethod.OK);
 //    }
 
+    @RequestMapping(value = "/upload",method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Void> uploadImage(@ModelAttribute List<MultipartFile> files){
+        try{
+            realtyService.saveImage(files);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
     //삭제
     @DeleteMapping("/{realty-id}")
     public ResponseEntity<Void> deleteRealty(@PathVariable(name="realty-id") Long realtyId){
@@ -64,14 +71,23 @@ public class realtycontroller {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //키워드 기반 전체 조회,넘어오올땐 requestParam으로 넘어서 옴. map좌표 포함해서 받을 듯
     @GetMapping
-    public ResponseEntity<List<RealtyDto>> getRealtyList(){
-        return new ResponseEntity<>(realtyService.getRealtyList(), HttpStatus.OK);
+    public ResponseEntity<List<Marker>> getRealtyMarkers(){
+        return new ResponseEntity<>(realtyService.getRealtyMarkers(), HttpStatus.OK);
     }
 
-    //추천 매물 뿌려주기(조회순 및 라이크 순)
+    //
 
+    //키워드 기반 조회(마커)
+
+    //
+
+    //해당 지역 추천 매물 뿌려주기(조회순 및 라이크 순)
+    //토큰이있다면 username으로 user찾아서 interestdistrict 1번 찾아서 dong으로 realty 찾아서 보내주던데
+    @GetMapping(name = "/recommend")
+    public ResponseEntity<List<RealtyDto>> getRecommendedRealty(){
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     //상세 조회
     @GetMapping(path = "/{realty-id}")

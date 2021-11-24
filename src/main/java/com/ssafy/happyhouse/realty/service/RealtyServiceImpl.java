@@ -4,6 +4,7 @@ import com.ssafy.happyhouse.district.entity.Dong;
 import com.ssafy.happyhouse.district.repository.DongRepository;
 import com.ssafy.happyhouse.enquiry.entity.Enquiry;
 import com.ssafy.happyhouse.realty.entity.*;
+import com.ssafy.happyhouse.realty.model.Marker;
 import com.ssafy.happyhouse.realty.model.RealtyDto;
 import com.ssafy.happyhouse.realty.model.RealtyPicturesDto;
 import com.ssafy.happyhouse.realty.model.RealtyResponseDto;
@@ -12,10 +13,12 @@ import com.ssafy.happyhouse.realty.repository.RealtyRepository;
 import com.ssafy.happyhouse.spot.entity.Segwon;
 import com.ssafy.happyhouse.user.entity.User;
 import com.ssafy.happyhouse.user.repository.UserRepository;
+import com.ssafy.happyhouse.util.file.FileHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,9 +35,21 @@ public class RealtyServiceImpl implements RealtyService{
     private final UserRepository userRepository;
     private final DongRepository dongRepository;
     private final RealtyPictureRepository realtyPictureRepository;
+    private final FileHandler fileHandler;
+//    private final ModelMapper modelMapper;
     private final ModelMapper modelMapper;
     //정석은 controller - service - servicimpl = 권한문제 발생할 수 있으므로
 
+    @Override
+    public String saveImage(List<MultipartFile> multipartFile) throws Exception {
+        try{
+            fileHandler.parseFileInfo(multipartFile);
+        } catch (Exception e){
+            throw e;
+        }
+
+        return null;
+    }
     @Override
     public String saveRealty(RealtyDto realtyDto,String username) {
         try{
@@ -146,8 +161,18 @@ public class RealtyServiceImpl implements RealtyService{
     }
 
     @Override
-    public List<RealtyDto> getRealtyList() {
-        return null;
+    public List<Marker> getRealtyMarkers() {
+        List<Realty> realties = realtyRepository.findAll();
+        //좌표에 맞게 search 해주기
+
+        //좌표 같이 보내주기
+        return realties.stream().map(realty ->
+                Marker.builder()
+                        .realtyType(realty.getRealtyType())
+                        .contractType(realty.getContractType())
+                        .segwons(realty.getSegwons())
+                        .price(realty.getPrice())
+                        .build()).collect(Collectors.toList());
     }
 
 
