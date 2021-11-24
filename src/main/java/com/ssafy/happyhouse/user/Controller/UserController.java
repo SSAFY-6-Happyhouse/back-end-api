@@ -4,6 +4,7 @@ import com.ssafy.happyhouse.user.model.LoginDto;
 import com.ssafy.happyhouse.user.model.UserDto;
 import com.ssafy.happyhouse.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +23,12 @@ public class UserController {
     }
     @PostMapping(path = "/signin")
     public ResponseEntity<String> userSignin(@RequestBody LoginDto loginDto){
-        return new ResponseEntity<>(userService.login(loginDto), HttpStatus.OK);
-    }
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Authorization", "Bearer "+userService.login(loginDto));
 
+        return new ResponseEntity<>(userService.login(loginDto), responseHeaders, HttpStatus.OK);
+    }
+//    http header에 Authorization key의 Bearer ((토큰키))를 value로 response
     @DeleteMapping(path = "/{user_id}")
     public ResponseEntity<Void> deleteUser(@PathVariable(name = "user_id") Long userId) {
         try {

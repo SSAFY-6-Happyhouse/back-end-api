@@ -27,6 +27,8 @@ public class UserServiceImpl implements UserService{
         }else{
             return null;
         }
+
+
     }
 
     @Override
@@ -48,6 +50,13 @@ public class UserServiceImpl implements UserService{
     public void updateUser(UserDto userDto) {
         User user = userRepository.findByUsername(userDto.getUsername()).get();
 
+    }
+
+    @Override
+    public UserDto getUserInfo(String username) {
+        User user = userRepository.findByUsername(username).get();
+       // UserDto userDto =
+        return null;
     }
 
     @Override
