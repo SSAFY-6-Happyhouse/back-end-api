@@ -18,16 +18,29 @@ public class EnquiryController {
 
     @GetMapping("/realty/{realty-id}")
     public ResponseEntity<EnquiryDto> getEnquiry(@RequestParam(name = "realty-id") Long realtyId){
-        EnquiryDto enquiryDto = enquiryService.getEnquiryByRealtyId(realtyId);
+        EnquiryDto enquiryDto;
+        try{
+           enquiryDto = enquiryService.getEnquiryByRealtyId(realtyId);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         if(ObjectUtils.isEmpty(enquiryDto)){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(enquiryDto, HttpStatus.OK);
     }
 
     @PostMapping("/realty/{realty-id}")
-    public ResponseEntity<EnquiryDto> saveEnquiry(@RequestParam(name = "realty-id")Long realtyId, @RequestParam(name = "username")String username){
-        EnquiryDto enquiryDto = enquiryService.saveEnquiry(username, realtyId);
+    public ResponseEntity<EnquiryDto> saveEnquiry(@RequestParam(name = "realty-id")Long realtyId
+                                                , @RequestParam(name = "username")String username){
+        EnquiryDto enquiryDto;
+        try{
+            enquiryDto = enquiryService.saveEnquiry(username, realtyId);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(enquiryDto, HttpStatus.OK);
     }
 
