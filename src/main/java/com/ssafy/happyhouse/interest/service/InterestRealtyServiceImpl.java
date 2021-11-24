@@ -4,6 +4,7 @@ import com.ssafy.happyhouse.interest.entity.InterestRealty;
 import com.ssafy.happyhouse.interest.model.InterestRealtyDto;
 import com.ssafy.happyhouse.interest.repository.InterestRealtyRepository;
 import com.ssafy.happyhouse.realty.entity.Realty;
+import com.ssafy.happyhouse.realty.repository.RealtyRepository;
 import com.ssafy.happyhouse.user.entity.User;
 import com.ssafy.happyhouse.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
