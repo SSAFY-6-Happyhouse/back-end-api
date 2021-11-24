@@ -9,13 +9,24 @@ public class District {
     @Column(name = "DISTRICT_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long districtId;
-/*
-    private Sido sido;
 
-    private Gugun gugun;
+    @Column(name = "SIDONAME")
+    private String sidoName;
 
-    private Dong dong;*/
+    @Column(name = "GUGUNNAME")
+    private String gugunName;
 
+    @Column(name = "DONGNAME")
+    private String dongName;
 
+    @OneToOne
+    @JoinColumn(name = "DONGCODE",referencedColumnName = "DONGCODE")
+    private Dong dong;
+
+    @Column(name = "lat")
+    private double lat;
+
+    @Column(name = "lng")
+    private double lng;
 
 }
