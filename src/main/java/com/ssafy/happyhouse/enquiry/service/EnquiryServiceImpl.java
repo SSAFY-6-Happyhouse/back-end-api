@@ -8,10 +8,12 @@ import com.ssafy.happyhouse.realty.repository.RealtyRepository;
 import com.ssafy.happyhouse.user.entity.User;
 import com.ssafy.happyhouse.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class EnquiryServiceImpl implements EnquiryService {
 
@@ -20,9 +22,10 @@ public class EnquiryServiceImpl implements EnquiryService {
     private final UserRepository userRepository;
 
     @Override
-    public EnquiryDto getEnquiryByRealtyId(Long realtyId) throws Exception{
+    public EnquiryDto getEnquiryByRealtyId(Long realtyId, String username) throws Exception{
         Realty realty = realtyRepository.findById(realtyId).get();
-        Enquiry enquiry = enquiryRepository.findByRealty(realty).get();
+        User user = userRepository.findByUsername(username).get();
+        Enquiry enquiry = enquiryRepository.findEnquiryByRealtyAndUser(realty, user).get();
 
         if(ObjectUtils.isEmpty(enquiry)){
             return null;

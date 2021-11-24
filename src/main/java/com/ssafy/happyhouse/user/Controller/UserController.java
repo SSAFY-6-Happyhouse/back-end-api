@@ -1,6 +1,7 @@
 package com.ssafy.happyhouse.user.Controller;
 
 import com.ssafy.happyhouse.user.model.LoginDto;
+import com.ssafy.happyhouse.user.model.UpdateDto;
 import com.ssafy.happyhouse.user.model.UserDto;
 import com.ssafy.happyhouse.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,19 @@ public class UserController {
         userService.saveUser(userDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @PutMapping
+    public ResponseEntity<UpdateDto> updateUser(@RequestBody UpdateDto updateDto) {
+        UpdateDto responseDto;
+        try{
+            responseDto = userService.updateUser(updateDto);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+     return new ResponseEntity<>(updateDto, HttpStatus.OK);
+    }
+
     @PostMapping(path = "/signin")
     public ResponseEntity<String> userSignin(@RequestBody LoginDto loginDto){
         return new ResponseEntity<>(userService.login(loginDto), HttpStatus.OK);
