@@ -1,5 +1,6 @@
 package com.ssafy.happyhouse.user.service;
 
+import com.ssafy.happyhouse.district.repository.DongRepository;
 import com.ssafy.happyhouse.security.JwtTokenProvider;
 import com.ssafy.happyhouse.user.entity.User;
 import com.ssafy.happyhouse.user.model.LoginDto;
@@ -37,9 +38,6 @@ public class UserServiceImpl implements UserService{
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
             try {
 //            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-                List<String> list = userDto.getDistrinct();
-                //Dong dong = dongRepository.findByDongName();
-               // StringTokenizer st = new StringTokenizer(, " ");
                 userRepository.save(userDto.toEntity());
             } catch (Exception e){
                 throw e;
