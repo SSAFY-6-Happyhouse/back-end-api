@@ -16,11 +16,12 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping(path="/signup")
     public ResponseEntity<String> registerUser(@RequestBody UserDto userDto) {
         userService.saveUser(userDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
     @PostMapping(path = "/signin")
     public ResponseEntity<String> userSignin(@RequestBody LoginDto loginDto){
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -29,6 +30,15 @@ public class UserController {
         return new ResponseEntity<>(userService.login(loginDto), responseHeaders, HttpStatus.OK);
     }
 //    http header에 Authorization key의 Bearer ((토큰키))를 value로 response
+
+    //조회
+    @GetMapping(path = "/{user_id}")
+    public ResponseEntity<UserDto> getUserInfo(@PathVariable(name = "user_id") Long userId) {
+        //return new ResponseEntity<>(userService.getUserInfo(), HttpStatus.OK);
+        return null;
+    }
+
+    //삭제
     @DeleteMapping(path = "/{user_id}")
     public ResponseEntity<Void> deleteUser(@PathVariable(name = "user_id") Long userId) {
         try {
