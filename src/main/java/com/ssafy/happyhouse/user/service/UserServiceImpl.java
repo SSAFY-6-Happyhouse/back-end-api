@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    //private final DongRepository dongRepository;
+    private final DongRepository dongRepository;
 
     @Override
     public String login(LoginDto loginDto) {
