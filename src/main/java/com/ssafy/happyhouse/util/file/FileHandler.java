@@ -17,9 +17,9 @@ import java.util.List;
 @Slf4j
 public class FileHandler {
 
-    public List<RealtyPicture> parseFileInfo(List<MultipartFile> multipartFiles) throws Exception{
+    public List<String> parseFileInfo(List<MultipartFile> multipartFiles) throws Exception{
         List<RealtyPicture> fileList = new ArrayList<>();
-
+        List<String> locations = new ArrayList<>();
         if(!CollectionUtils.isEmpty(multipartFiles)) {
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter dateTimeFormatter =
@@ -58,12 +58,12 @@ public class FileHandler {
 
                     file = new File(absolutePath + path + File.separator + newFileName);
                     multipartFile.transferTo(file);
-
+                    locations.add(absolutePath+path+File.separator+newFileName);
                     file.setWritable(true);
                     file.setWritable(true);
                 }
             }
         }
-        return fileList;
+        return locations;
     }
 }

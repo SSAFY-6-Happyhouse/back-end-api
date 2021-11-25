@@ -62,9 +62,16 @@ public class RealtyServiceImpl implements RealtyService{
         return null;
     }
     @Override
-    public String saveImage(List<MultipartFile> multipartFile) throws Exception {
+    public String saveImage(List<MultipartFile> multipartFile, Long realtyId) throws Exception {
+        Realty realty = realtyRepository.findById(realtyId).get();
         try{
-            fileHandler.parseFileInfo(multipartFile);
+           List<String> locations = fileHandler.parseFileInfo(multipartFile);
+            realtyPictureRepository.saveAll(
+                    locations.stream().map(location ->
+                                    RealtyPicture.builder()
+                                            .location(location)
+                                            .realty(realty).build())
+                            .collect(Collectors.toList()));
         } catch (Exception e){
             throw e;
         }
@@ -96,16 +103,20 @@ public class RealtyServiceImpl implements RealtyService{
 //            for(int i=0;i<segwonValues.size();i++){//땡세권 받아오기
 //                segwons.add(Segwon.values()[segwonValues.get(i).intValue()]);
 //            }
+            Coordinate coordinate = kakaoMap.getCoordinatesFromAddress(realtyDto.getDongstr());
+
 
             Dong dong = checkValidDong(dongstr,dongValues);
             log.info("NOT NULL");
 
-            if(ObjectUtils.isEmpty(dong)) { //비어있다면 exception으로 끊어버리기
-                throw new Exception();
+            if(ObjectUtils.isEmpty(dong)) { //비어있다면 exception으로 끊어버리
+                try{
+                    dong = dongRepository.findByDongCode(coordinate.getDongCode()).get();
+                }catch (Exception e){
+                    throw e;
+                }
             }
             realty.setDong(dong);
-
-            Coordinate coordinate = kakaoMap.getCoordinatesFromAddress(realtyDto.getDongstr(), realtyDto.getAddress());
             realty.setLatitude(coordinate.getLatitude());
             realty.setLongitude(coordinate.getLongitude());
 
