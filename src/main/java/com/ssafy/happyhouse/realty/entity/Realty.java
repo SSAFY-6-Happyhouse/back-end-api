@@ -125,4 +125,17 @@ public class Realty {
     @Column(name = "LONGITUDE")
     private Double longitude;
 
+//    public Realty updateRealty(Realty updatedRealty){
+//        if(){
+//
+//        }
+//        if(){
+//
+//        }
+//
+//
+//
+//
+//        return this;
+ //   }
 }

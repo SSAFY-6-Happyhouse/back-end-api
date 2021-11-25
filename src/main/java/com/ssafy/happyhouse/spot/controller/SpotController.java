@@ -38,9 +38,20 @@ public class SpotController {
 
     private final SpotGetAPIController controller;
 
-    @GetMapping("/a")
     @Scheduled(cron = "0 0 12 ? * WED") // 매월 아무날짜의 매주 수요일 12:00:00 에 스케줄링
-    public void registerSpot() throws ParseException {
+    @GetMapping("/c")
+    public void updateSpot() throws Exception{
+        deleteSpot();
+        registerSpot();
+    }
+
+    //@GetMapping("/b")
+    private void deleteSpot() throws Exception {
+      spotService.deleteSpot();
+    }
+
+    //@GetMapping("/a")
+    public void registerSpot() throws Exception {
 
         for(SpotKeyword spotKeyword : SpotKeyword.values()) {
             SearchSpotCategoryReq spotreq = new SearchSpotCategoryReq();
@@ -58,12 +69,15 @@ public class SpotController {
         }
     }
 
+    @GetMapping("/test")
+    public List<Segwon> test() throws Exception {
+        //List<Segwon> list=spotService.getSegwonList(new Point(127.05333666716001,37.54002651744539)); //마세권 별세권 리턴
+        List<Segwon> list=spotService.getSegwonList(126.981341046733,37.5693096043926); //별세권, 주세권, 편세권 리턴
+        return list;
+    }
+
     @PostMapping
-    public ResponseEntity<List<SpotDto>> getSegwonList(@RequestParam(value = "segwons") List<Long> segwons){
-        //임시로 테스트해볼라고
-//        segwons=new ArrayList<>();
-//        segwons.add(1L);
-//        segwons.add(2L);
+    public ResponseEntity<List<SpotDto>> getSegwonList(@RequestParam(value = "segwons") List<Long> segwons) throws Exception {
         List<SpotKeyword> spotkeyword = new ArrayList<>();
         //realty 에서 segwons정보 등록할때 호출시 무슨 세권인지 준다.
         for(int i=0;i<segwons.size();i++){
@@ -74,23 +88,15 @@ public class SpotController {
     }
 
     @GetMapping()
-    public ResponseEntity<SpotDto> getSpot(@RequestParam("spot_id") Long spotId){
+    public ResponseEntity<SpotDto> getSpot(@RequestParam("spot_id") Long spotId) throws Exception {
         SpotDto spotDto=spotService.getSpot(spotId);
         return new ResponseEntity<>(spotDto,HttpStatus.OK);
     }
 
-    @GetMapping("/test")
-    public List<Segwon> test() throws ParseException {
-        //List<Segwon> list=spotService.getSegwonList(new Point(127.05333666716001,37.54002651744539)); //마세권 별세권 리턴
-        List<Segwon> list=spotService.getSegwonList(new Point(126.981341046733,37.5693096043926)); //별세권, 주세권, 편세권 리턴
-        return list;
-    }
 
 
 //    @GetMapping() //주소와 세권을 주면 있으면 list와 Ok 없으면 null을 보내준다.
-//    public ResponseEntity<List<SpotDto>> getSpotList(@RequestParam("segwon_id") Long segwonId){
+//    public ResponseEntity<List<SpotDto>> getSpotList(@RequestParam("segwon_id") Long segwonId) throws Exception{
 //        SpotKeyword spotKeyword=SpotKeyword.values()[segwonId.intValue()];
-//
-//
 //    }
 }
