@@ -16,7 +16,8 @@ public class UserDto {
     private String phone;
     private String username;
     private String authority;
-    private List<String> distrinct;
+    private List<String> dongcode;
+    private List<Integer> segwon;
 
     public User toEntity(){
         Set<Authority> authorities = new HashSet<>();

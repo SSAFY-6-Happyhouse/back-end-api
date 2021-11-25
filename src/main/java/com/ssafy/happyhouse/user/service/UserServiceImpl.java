@@ -1,7 +1,11 @@
 package com.ssafy.happyhouse.user.service;
 
+import com.ssafy.happyhouse.district.entity.Dong;
 import com.ssafy.happyhouse.district.repository.DongRepository;
+import com.ssafy.happyhouse.interest.entity.InterestDistrict;
+import com.ssafy.happyhouse.interest.repository.InterestDistrictRepository;
 import com.ssafy.happyhouse.security.JwtTokenProvider;
+import com.ssafy.happyhouse.spot.entity.Segwon;
 import com.ssafy.happyhouse.user.entity.User;
 import com.ssafy.happyhouse.user.model.LoginDto;
 import com.ssafy.happyhouse.user.model.UpdateDto;
@@ -12,17 +16,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
-=======
->>>>>>> main
 import java.util.StringTokenizer;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
+    private final InterestDistrictRepository interestDistrictRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
@@ -44,18 +46,29 @@ public class UserServiceImpl implements UserService{
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
             try {
 //            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-//                User user = userDto.toEntity();
+                User user = userDto.toEntity();
+                user = userRepository.save(user);
+                List<InterestDistrict> interestDistricts = new ArrayList<>();
 
-                List<String> dong = new ArrayList<>();
+                for(String dongCode : userDto.getDongcode()){
 
-                List<String> distrincts = new ArrayList<String>();
-                String address = String.join(" ", distrincts);
+                    Dong dong = dongRepository.findByDongCode(dongCode).get();
+                    InterestDistrict interestDistrict= interestDistrictRepository.save(
+                            InterestDistrict.builder()
+                                    .dong(dong)
+                                    .user(user)
+                                    .build());
 
-                StringTokenizer st = new StringTokenizer(address);
-                for(int i = 0; i < 3; i++) {
-                    dong.add(st.nextToken());
+                    interestDistricts.add(interestDistrict);
                 }
-                userRepository.save(userDto.toEntity());
+                List<Segwon> segwons = new ArrayList<>();
+
+                for(Integer segwonId : userDto.getSegwon()){
+                    segwons.add(Segwon.values()[segwonId]);
+                }
+                user.setSegwons(segwons);
+                user.setInterestDistricts(interestDistricts);
+                userRepository.save(user);
             } catch (Exception e){
                 throw e;
             }
@@ -65,17 +78,6 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-<<<<<<< HEAD
-    public void updateUser(UserDto userDto) {
-        User user = userRepository.findByUsername(userDto.getUsername()).get();
-    }
-
-    @Override
-    public UserDto getUserInfo(String username) {
-        User user = userRepository.findByUsername(username).get();
-       // UserDto userDto =
-        return null;
-=======
     public UpdateDto updateUser(UpdateDto updateDto) throws Exception{ // 유저 객체를 가져와서 직접 변경뒤 save 하는 방식
         StringTokenizer st;
         User user = userRepository.findByUsername(updateDto.getUsername()).get();
@@ -96,7 +98,6 @@ public class UserServiceImpl implements UserService{
 
         userRepository.save(user);
         return updateDto;
->>>>>>> main
     }
 
     @Override

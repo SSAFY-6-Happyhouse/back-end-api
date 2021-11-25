@@ -1,4 +1,4 @@
-package com.ssafy.happyhouse.user.controller;
+package com.ssafy.happyhouse.user.Controller;
 
 import com.ssafy.happyhouse.user.model.LoginDto;
 import com.ssafy.happyhouse.user.model.UpdateDto;
@@ -23,8 +23,6 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-<<<<<<< HEAD
-=======
     @PutMapping
     public ResponseEntity<UpdateDto> updateUser(@RequestBody UpdateDto updateDto) {
         UpdateDto responseDto;
@@ -37,7 +35,6 @@ public class UserController {
      return new ResponseEntity<>(updateDto, HttpStatus.OK);
     }
 
->>>>>>> main
     @PostMapping(path = "/signin")
     public ResponseEntity<String> userSignin(@RequestBody LoginDto loginDto){
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -48,6 +45,7 @@ public class UserController {
 //    http header에 Authorization key의 Bearer ((토큰키))를 value로 response
 
     //조회
+/*
     @GetMapping(path = "/{user_id}")
     public ResponseEntity<UserDto> getUserInfo(@PathVariable(name = "user_id") Long userId) {
         //return new ResponseEntity<>(userService.getUserInfo(), HttpStatus.OK);
@@ -58,6 +56,7 @@ public class UserController {
     public  ResponseEntity<Void> updateUSer(@PathVariable(name = "user_id") Long userId, @RequestBody UserDto userDto) {
         userDto.setId(userId);
     }
+*/
 
     //삭제
     @DeleteMapping(path = "/{user_id}")
