@@ -1,5 +1,7 @@
 package com.ssafy.happyhouse.util.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.happyhouse.realty.model.Coordinate;
 import com.ssafy.happyhouse.spot.dto.SearchSpotCategoryResMain;
@@ -22,9 +24,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-@RestController
+@Component
 @Slf4j
-@RequestMapping(path = "/kakaomap")
 public class KakaoMap {
     @Value("${kakao.url.address}")
     private String kakaoAddressSearchUrl;
@@ -33,13 +34,10 @@ public class KakaoMap {
     private String kakaoAuthrization;
 
     //주소값을 바탕으로 좌표 저장하는 작업
-    @GetMapping
-    public Coordinate getCoordinatesFromAddress(){
+    public Coordinate getCoordinatesFromAddress(String dong, String address) throws JsonProcessingException {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization",kakaoAuthrization);
-        String dong = "서울특별시 양천구";
-        String address = "목동서로100";
         URI uri = UriComponentsBuilder.fromUriString(kakaoAddressSearchUrl)
                 .queryParams(SearchAddressReq.builder().dongAddress(dong).specificAddress(address).build().toMultiValueMap())
                 .build()
@@ -49,19 +47,23 @@ public class KakaoMap {
         HttpEntity httpEntity = new HttpEntity(headers);
         ParameterizedTypeReference responseType=new ParameterizedTypeReference<SearchAddressResMain>(){};
 
-        ResponseEntity<Object> responseEntity =
-                new RestTemplate().exchange(uri, HttpMethod.GET, httpEntity, responseType);
+        ResponseEntity<String> responseEntity =
+                new RestTemplate().exchange(uri, HttpMethod.GET, httpEntity, String.class);
 
         if(responseEntity.getStatusCode().is2xxSuccessful()){
-            SearchAddressResMain searchAddressResMain = (SearchAddressResMain) responseEntity.getBody();
+            String searchAddressResMain =  responseEntity.getBody();
             log.info(responseEntity.getBody().toString());
 
-            log.info(searchAddressResMain.getDocument().get(0).getY().toString());
-            log.info(searchAddressResMain.getDocument().get(0).getX().toString());
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(responseEntity.getBody());
+            Double longitude = jsonNode.get("documents").get(0).get("x").asDouble();
+            Double latitude = jsonNode.get("documents").get(0).get("y").asDouble();
+
             return Coordinate.builder()
-                    .latitude(searchAddressResMain.getDocument().get(0).getY())
-                    .longitude(searchAddressResMain.getDocument().get(0).getX())
-                    .build();
+                    .longitude(longitude)
+                    .latitude(latitude).build();
+
+
         }
         return null;
     }

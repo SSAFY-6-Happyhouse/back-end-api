@@ -12,6 +12,7 @@ import com.ssafy.happyhouse.spot.repository.SpotRepository;
 import com.ssafy.happyhouse.spot.utils.GeometryUtil;
 import com.ssafy.happyhouse.spot.utils.Location;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.WKTReader;
@@ -28,6 +29,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class SpotServiceImpl implements SpotService{
 
     private final SpotRepository spotRepository;
@@ -120,7 +122,7 @@ public class SpotServiceImpl implements SpotService{
     public List<Segwon> getSegwonList(double x, double y) throws Exception {
         double baseLatitude= y;
         double baseLongitude = x;
-        double distance = 0.5;
+        double distance = 3;
 
         // 북동쪽 좌표 구하기
         Location northEast = GeometryUtil.calculate(baseLatitude, baseLongitude, distance, Direction.NORTHEAST.getBearing());
@@ -142,8 +144,9 @@ public class SpotServiceImpl implements SpotService{
 
 
         List<String> result = query.getResultList();
-
+        log.info(result.toString());
         Set<Segwon> segwons =new HashSet<>();
+
         for(String value : result){
             for (Segwon segwon:Segwon.values()){
                 if(value.equals(segwon.getCode())){
