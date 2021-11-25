@@ -9,5 +9,7 @@ import java.util.Optional;
 public interface DongRepository extends JpaRepository<Dong, Long> {
     List<Dong> findAllByDongName(String DongName);
     Dong findByDongNameAndGugunName(String dong,String gugun);
+    List<Dong> findAllByDongCodeStartingWith(String dongCode);
+
 //    Optional<Dong> findByDongId(Long DongId);
 }
