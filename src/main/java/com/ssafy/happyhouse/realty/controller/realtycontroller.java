@@ -36,7 +36,6 @@ public class realtycontroller {
     public ResponseEntity<String> createRealty(@RequestBody RealtyDto realtyDto //매물 등록 내용
                                                , @RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken
                                                ) throws IOException, NoSuchAlgorithmException {
-
         //토큰에서 등록자 name뽑기
         String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
         DecodedJWT decodedJWT = JWT.decode(token);//디코딩
@@ -73,28 +72,36 @@ public class realtycontroller {
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    //해당 realtyPicture update -> id에 해당하는 realtyPicture의 DB값들을 delete해준다.
+    @RequestMapping(value = "/{realty-id}/updateImage",method =RequestMethod.PUT ,consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Void> updateImage(@ModelAttribute List<MultipartFile> files,
+                                            @PathVariable(value = "realty-id") Long realtyId) {
+        try {
+            realtyService.updateImage(files,realtyId);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     //삭제
     @DeleteMapping("/{realty-id}")
     public ResponseEntity<Void> deleteRealty(@PathVariable(name="realty-id") Long realtyId){
         realtyService.deleteRealty(realtyId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
+    //
     @GetMapping
     public ResponseEntity<List<Marker>> getRealtyMarkers(){
         return new ResponseEntity<>(realtyService.getRealtyMarkers(), HttpStatus.OK);
     }
 
-    //
-
-    //키워드 기반 조회(마커)
-
-    //
+    //키워드 기반 조회(마커) , 전체 Realty ->
 
     //해당 지역 추천 매물 뿌려주기(조회순 및 라이크 순)
     //토큰이있다면 username으로 user찾아서 interestdistrict 1번 찾아서 dong으로 realty 찾아서 보내주던데
     @GetMapping(path = "/recommend")
-    
     public ResponseEntity<List<Marker>> getRecommendedRealty(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken){
         //토큰에서 등록자 name뽑기
         String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
@@ -107,7 +114,6 @@ public class realtycontroller {
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
         return new ResponseEntity<>(recommendedMarker, HttpStatus.OK);
     }
     //상세 조회

@@ -18,7 +18,7 @@ spring:
     defer-datasource-initialization: true
 
 server:
-  port: 8080
+  port: 8081
 
 kakao:
   url:

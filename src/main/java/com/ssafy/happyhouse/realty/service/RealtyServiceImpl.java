@@ -2,7 +2,6 @@ package com.ssafy.happyhouse.realty.service;
 
 import com.ssafy.happyhouse.district.entity.Dong;
 import com.ssafy.happyhouse.district.repository.DongRepository;
-import com.ssafy.happyhouse.enquiry.entity.Enquiry;
 import com.ssafy.happyhouse.realty.entity.*;
 import com.ssafy.happyhouse.realty.model.*;
 import com.ssafy.happyhouse.realty.repository.RealtyPictureRepository;
@@ -50,18 +49,17 @@ public class RealtyServiceImpl implements RealtyService{
             }
             List<Dong> dong = dongRepository.findAllByDongName(dongValues.get(2));
             //dong객체로 sidoName,gugunName과 동일하면 realty객체에 Dong객체를 넣어줘라.
-            for(int i=0;i<dong.size();i++){
+            for(int i=0;i<dong.size();i++) {
                 Dong ddong = dong.get(i);
                 String sidoName = ddong.getSidoName();
                 String gugunName = ddong.getGugunName();
 
-                if(sidoName.equals(dongValues.get(0))&&gugunName.equals(dongValues.get(1))){
+                if (sidoName.equals(dongValues.get(0)) && gugunName.equals(dongValues.get(1))) {
                     return ddong;
                 }
             }
         return null;
     }
-
     @Override
     public String saveImage(List<MultipartFile> multipartFile, Long realtyId) throws Exception {
         Realty realty = realtyRepository.findById(realtyId).get();
@@ -76,9 +74,27 @@ public class RealtyServiceImpl implements RealtyService{
         } catch (Exception e){
             throw e;
         }
-
         return null;
     }
+
+    @Override
+    public void updateImage(List<MultipartFile> multipartFile,Long realtyId) throws Exception{
+        try{
+            Realty realty = realtyRepository.findById(realtyId).get();
+            List<RealtyPicture> realtyPictures = realty.getRealtyPictures();
+            realtyPictureRepository.deleteAll(realtyPictures);//삭제
+            List<String> locations = fileHandler.parseFileInfo(multipartFile);//새롭게 받아오기
+            realtyPictureRepository.saveAll(
+                    locations.stream().map(location ->
+                            RealtyPicture.builder()
+                                    .location(location)
+                                    .realty(realty).build())
+                            .collect(Collectors.toList()));
+        }catch(Exception e){
+            throw e;
+        }
+    }
+
     @Override
     public String saveRealty(RealtyDto realtyDto,String username) throws Exception{
         try{
@@ -100,8 +116,6 @@ public class RealtyServiceImpl implements RealtyService{
                 options.add(Option.values()[optionValues.get(i).intValue()]);
             }
             log.info("NOT NULL");
-
-
 //            for(int i=0;i<segwonValues.size();i++){//땡세권 받아오기
 //                segwons.add(Segwon.values()[segwonValues.get(i).intValue()]);
 //            }
@@ -131,7 +145,6 @@ public class RealtyServiceImpl implements RealtyService{
             realty.setContractProcess(contractProcess);
             realty.setContractType(contractType);
             realty.setRegisterer(user);
-
 
             realtyRepository.save(realty); //dto에서는 service, repository layer에선 entity객체가 들어간다. 없으면 null이 들어감.
         }catch (Exception e){
@@ -220,17 +233,19 @@ public class RealtyServiceImpl implements RealtyService{
     @Override
     public RealtyResponseDto getRealty(Long realtyId) {//상세조회 ,
         Realty realty = realtyRepository.findById(realtyId).get();
-//        List<RealtyPicture> realtyPicture = realty.getRealtyPictures();
         realty.setHitCount(realty.getHitCount()+1);
         realty = realtyRepository.save(realty);//업데이트 된 상태
         User user = userRepository.findById(realty.getRegisterer().getUserId()).get();
         Dong dong = dongRepository.findById(realty.getDong().getDongId()).get();//Dong객체 갖고 오기
-
+        List<RealtyPicture> realtyPicture = realty.getRealtyPictures();
+        List<String> picturesLocation = new ArrayList();
+        //realtyPicture에 location넣어주기
+        for(int i=0;i<realtyPicture.size();i++){
+            picturesLocation.add(realtyPicture.get(i).getLocation());
+        }
         //세권 정보, 옵션 정보, 관심
-//        List<Segwon> segwons = realty.getSegwons();
+        List<Segwon> segwons = realty.getSegwons();
         List<Option> options = realty.getOptions();
-        List<RealtyPicture> realtyPictures = realty.getRealtyPictures();
-        List<Enquiry> enquiries = realty.getEnquiries();
 
         return RealtyResponseDto.builder()
                 .address(realty.getAddress())
@@ -249,14 +264,14 @@ public class RealtyServiceImpl implements RealtyService{
                 .registerDate(realty.getRegisterDate())
                 .size(realty.getSize())
                 .options(options)
-                .realtyPictures(realtyPictures)
-                .enquiries(enquiries)
+                .realtyPicturesLocation(picturesLocation)
                 .contractProcess(realty.getContractProcess())
                 .contractType(realty.getContractType())
                 .realtyType(realty.getRealtyType())
                 .dongName(dong.getDongName())
                 .gugunName(dong.getGugunName())
                 .sidoName(dong.getSidoName())
+                .segwons(segwons)
                 .build();
     }
 
@@ -276,8 +291,6 @@ public class RealtyServiceImpl implements RealtyService{
                         .realtyType(realty.getRealtyType())
                         .build()).collect(Collectors.toList());
     }
-
-
     @Override
     public List<Marker> getRealtyMarkers() {
         List<Realty> realties = realtyRepository.findAll();
@@ -294,6 +307,4 @@ public class RealtyServiceImpl implements RealtyService{
                         .longitude(realty.getLongitude())
                         .build()).collect(Collectors.toList());
     }
-
-
 }

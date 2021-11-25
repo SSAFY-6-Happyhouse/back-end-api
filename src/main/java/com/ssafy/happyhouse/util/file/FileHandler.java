@@ -38,31 +38,32 @@ public class FileHandler {
                 if (!wasSuccessful) {
                     log.info("file : was not successful");
                 }
-                for (MultipartFile multipartFile : multipartFiles) {
-
-                    String originFileExtension;
-                    String contentType = multipartFile.getContentType();
-
-                    if (ObjectUtils.isEmpty(contentType)) {
-                        break;
-                    } else {
-                        if (contentType.contains("image/jpeg"))
-                            originFileExtension = ".jpg";
-                        else if (contentType.contains("image/png"))
-                            originFileExtension = ".png";
-                        else
-                            break;
-                    }
-
-                    String newFileName = System.nanoTime() + originFileExtension;
-
-                    file = new File(absolutePath + path + File.separator + newFileName);
-                    multipartFile.transferTo(file);
-                    locations.add(absolutePath+path+File.separator+newFileName);
-                    file.setWritable(true);
-                    file.setWritable(true);
-                }
             }
+            for (MultipartFile multipartFile : multipartFiles) {
+
+                String originFileExtension;
+                String contentType = multipartFile.getContentType();
+
+                if (ObjectUtils.isEmpty(contentType)) {
+                    break;
+                } else {
+                    if (contentType.contains("image/jpeg"))
+                        originFileExtension = ".jpg";
+                    else if (contentType.contains("image/png"))
+                        originFileExtension = ".png";
+                    else
+                        break;
+                }
+
+                String newFileName = System.nanoTime() + originFileExtension;
+
+                file = new File(absolutePath + path + File.separator + newFileName);
+                multipartFile.transferTo(file);
+                locations.add(absolutePath+path+File.separator+newFileName);
+                file.setWritable(true);
+                file.setWritable(true);
+            }
+
         }
         return locations;
     }

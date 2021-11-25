@@ -14,6 +14,7 @@ public interface RealtyService {
     public Dong checkValidDong(String dongstr,List<String> dongValues);
     public RealtyResponseDto updateRealty(RealtyDto realtyDto) throws Exception;
     public String saveImage(List<MultipartFile> multipartFile, Long realtyId) throws Exception;
+    public void updateImage(List<MultipartFile> multipartFile, Long realtyId) throws Exception;
     public String saveRealty(RealtyDto realtyDto,String username) throws Exception;
     public void deleteRealty(Long realtyId);
     public List<Marker> getRealtyMarkers();
