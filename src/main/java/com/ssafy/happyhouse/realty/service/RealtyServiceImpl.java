@@ -2,7 +2,6 @@ package com.ssafy.happyhouse.realty.service;
 
 import com.ssafy.happyhouse.district.entity.Dong;
 import com.ssafy.happyhouse.district.repository.DongRepository;
-import com.ssafy.happyhouse.enquiry.entity.Enquiry;
 import com.ssafy.happyhouse.realty.entity.*;
 import com.ssafy.happyhouse.realty.model.*;
 import com.ssafy.happyhouse.realty.repository.RealtyPictureRepository;
@@ -77,6 +76,25 @@ public class RealtyServiceImpl implements RealtyService{
         }
         return null;
     }
+
+    @Override
+    public void updateImage(List<MultipartFile> multipartFile,Long realtyId) throws Exception{
+        try{
+            Realty realty = realtyRepository.findById(realtyId).get();
+            List<RealtyPicture> realtyPictures = realty.getRealtyPictures();
+            realtyPictureRepository.deleteAll(realtyPictures);//삭제
+            List<String> locations = fileHandler.parseFileInfo(multipartFile);//새롭게 받아오기
+            realtyPictureRepository.saveAll(
+                    locations.stream().map(location ->
+                            RealtyPicture.builder()
+                                    .location(location)
+                                    .realty(realty).build())
+                            .collect(Collectors.toList()));
+        }catch(Exception e){
+            throw e;
+        }
+    }
+
     @Override
     public String saveRealty(RealtyDto realtyDto,String username) throws Exception{
         try{
@@ -98,8 +116,6 @@ public class RealtyServiceImpl implements RealtyService{
                 options.add(Option.values()[optionValues.get(i).intValue()]);
             }
             log.info("NOT NULL");
-
-
 //            for(int i=0;i<segwonValues.size();i++){//땡세권 받아오기
 //                segwons.add(Segwon.values()[segwonValues.get(i).intValue()]);
 //            }
@@ -129,7 +145,6 @@ public class RealtyServiceImpl implements RealtyService{
             realty.setContractProcess(contractProcess);
             realty.setContractType(contractType);
             realty.setRegisterer(user);
-
 
             realtyRepository.save(realty); //dto에서는 service, repository layer에선 entity객체가 들어간다. 없으면 null이 들어감.
         }catch (Exception e){
@@ -276,8 +291,6 @@ public class RealtyServiceImpl implements RealtyService{
                         .realtyType(realty.getRealtyType())
                         .build()).collect(Collectors.toList());
     }
-
-
     @Override
     public List<Marker> getRealtyMarkers() {
         List<Realty> realties = realtyRepository.findAll();
@@ -294,6 +307,4 @@ public class RealtyServiceImpl implements RealtyService{
                         .longitude(realty.getLongitude())
                         .build()).collect(Collectors.toList());
     }
-
-
 }
