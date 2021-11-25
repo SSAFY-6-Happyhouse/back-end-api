@@ -1,9 +1,18 @@
 package com.ssafy.happyhouse.district.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "DISTRICTS")
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Builder
 public class District {
     @Id
     @Column(name = "DISTRICT_ID")
