@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
-public class Dong {
+public class Dong implements Serializable {
     @Id
     @Column(name = "DONG_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

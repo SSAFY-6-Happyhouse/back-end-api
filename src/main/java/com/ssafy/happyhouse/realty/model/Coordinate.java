@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class Coordinate {
     private Double latitude;
     private Double longitude;
+    private String dongCode;
 }

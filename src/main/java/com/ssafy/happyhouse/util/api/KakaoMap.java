@@ -34,12 +34,12 @@ public class KakaoMap {
     private String kakaoAuthrization;
 
     //주소값을 바탕으로 좌표 저장하는 작업
-    public Coordinate getCoordinatesFromAddress(String dong, String address) throws JsonProcessingException {
+    public Coordinate getCoordinatesFromAddress(String roadAddress) throws JsonProcessingException {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization",kakaoAuthrization);
         URI uri = UriComponentsBuilder.fromUriString(kakaoAddressSearchUrl)
-                .queryParams(SearchAddressReq.builder().dongAddress(dong).specificAddress(address).build().toMultiValueMap())
+                .queryParams(SearchAddressReq.builder().dongAddress(roadAddress).build().toMultiValueMap())
                 .build()
                 .encode()
                 .toUri();
@@ -59,9 +59,14 @@ public class KakaoMap {
             Double longitude = jsonNode.get("documents").get(0).get("x").asDouble();
             Double latitude = jsonNode.get("documents").get(0).get("y").asDouble();
 
+            String dongCode = jsonNode.get("documents").get(0).get("address").get("b_code").asText();
+
+
             return Coordinate.builder()
                     .longitude(longitude)
-                    .latitude(latitude).build();
+                    .latitude(latitude)
+                    .dongCode(dongCode)
+                    .build();
 
 
         }
