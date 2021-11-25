@@ -21,6 +21,6 @@ public class InterestDistrictServiceImpl implements InterestDistrictService{
     public InterestDistrictDto getInterestDistrictOne(String username) throws Exception{
         User user = userRepository.findByUsername(username).get();
         InterestDistrict interestDistrict = interestDistrictRepository.findFirstByUser(user);
-        return new InterestDistrictDto(user, interestDistrict.getDong());
+        return null; //new InterestDistrictDto(user, interestDistrict.getDong());
     }
 }

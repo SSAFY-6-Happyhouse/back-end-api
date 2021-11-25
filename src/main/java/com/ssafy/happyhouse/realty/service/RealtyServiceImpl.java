@@ -72,6 +72,7 @@ public class RealtyServiceImpl implements RealtyService{
 //            for(int i=0;i<segwonValues.size();i++){//땡세권 받아오기
 //                segwons.add(Segwon.values()[segwonValues.get(i).intValue()]);
 //            }
+
             StringTokenizer tk = new StringTokenizer(dongstr);
             for(int i=0;i<3;i++){
                 dongValues.add(tk.nextToken());//0:서울시 1:성동구 2:응봉동
@@ -98,7 +99,7 @@ public class RealtyServiceImpl implements RealtyService{
             realty.setContractType(contractType);
             realty.setRegisterer(user);
 
-            Coordinate coordinate = kakaoMap.getCoordinatesFromAddress(realtyDto.getDongstr(),realtyDto.getAddress());
+            //Coordinate coordinate = kakaoMap.getCoordinatesFromAddress(realtyDto.getDongstr(),realtyDto.getAddress());
 
             realtyRepository.save(realty); //dto에서는 service, repository layer에선 entity객체가 들어간다. 없으면 null이 들어감.
         }catch (Exception e){
