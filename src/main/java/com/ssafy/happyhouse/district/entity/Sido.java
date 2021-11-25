@@ -1,9 +1,18 @@
 package com.ssafy.happyhouse.district.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "SIDO")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Sido {
     @Id
     @Column(name = "SIDO_ID")
