@@ -92,7 +92,7 @@ public class RealtyServiceImpl implements RealtyService{
             List<String> dongValues = new ArrayList<>();
 
             RealtyType realtyType = RealtyType.values()[realtyDto.getRealtyType().intValue()]; //매물 형태
-            ContractProcess contractProcess = ContractProcess.values()[realtyDto.getContractProcess().intValue()]; //거래 상황
+            ContractProcess contractProcess = ContractProcess.INPROCESS; //거래 상황
             ContractType contractType = ContractType.values()[realtyDto.getContractType().intValue()];//거래 형태
             log.info("NOT NULL");
 
