@@ -38,8 +38,19 @@ public class SpotController {
 
     private final SpotGetAPIController controller;
 
-    @GetMapping("/a")
     @Scheduled(cron = "0 0 12 ? * WED") // 매월 아무날짜의 매주 수요일 12:00:00 에 스케줄링
+    @GetMapping("/c")
+    public void updateSpot() throws Exception{
+        deleteSpot();
+        registerSpot();
+    }
+
+    //@GetMapping("/b")
+    private void deleteSpot() throws Exception {
+      spotService.deleteSpot();
+    }
+
+    //@GetMapping("/a")
     public void registerSpot() throws Exception {
 
         for(SpotKeyword spotKeyword : SpotKeyword.values()) {

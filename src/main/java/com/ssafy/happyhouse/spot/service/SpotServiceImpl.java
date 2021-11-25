@@ -45,8 +45,11 @@ public class SpotServiceImpl implements SpotService{
         Dong dong=null;
         if(str.length==4){
             dong = dongRepository.findByDongNameAndGugunName(str[2], str[1]);
+
         }else if(str.length==5){
             dong = dongRepository.findByDongNameAndGugunName(str[3], str[2]);
+        }else{
+            dong=null;
         }
 
 
@@ -109,8 +112,8 @@ public class SpotServiceImpl implements SpotService{
     }
 
     @Override
-    public void deleteSpot(Long spotId) throws Exception {
-
+    public void deleteSpot() throws Exception {
+        spotRepository.truncateTable();
     }
 
     @Override
