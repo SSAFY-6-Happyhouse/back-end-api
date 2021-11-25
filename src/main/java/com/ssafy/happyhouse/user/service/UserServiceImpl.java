@@ -11,7 +11,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +40,17 @@ public class UserServiceImpl implements UserService{
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
             try {
 //            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+//                User user = userDto.toEntity();
+
+                List<String> dong = new ArrayList<>();
+
+                List<String> distrincts = new ArrayList<String>();
+                String address = String.join(" ", distrincts);
+
+                StringTokenizer st = new StringTokenizer(address);
+                for(int i = 0; i < 3; i++) {
+                    dong.add(st.nextToken());
+                }
                 userRepository.save(userDto.toEntity());
             } catch (Exception e){
                 throw e;

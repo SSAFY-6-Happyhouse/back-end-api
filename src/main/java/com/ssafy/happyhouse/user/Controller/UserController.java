@@ -32,7 +32,6 @@ public class UserController {
 //    http header에 Authorization key의 Bearer ((토큰키))를 value로 response
 
     //조회
-/*
     @GetMapping(path = "/{user_id}")
     public ResponseEntity<UserDto> getUserInfo(@PathVariable(name = "user_id") Long userId) {
         //return new ResponseEntity<>(userService.getUserInfo(), HttpStatus.OK);
@@ -43,7 +42,6 @@ public class UserController {
     public  ResponseEntity<Void> updateUSer(@PathVariable(name = "user_id") Long userId, @RequestBody UserDto userDto) {
         userDto.setId(userId);
     }
-*/
 
     //삭제
     @DeleteMapping(path = "/{user_id}")
