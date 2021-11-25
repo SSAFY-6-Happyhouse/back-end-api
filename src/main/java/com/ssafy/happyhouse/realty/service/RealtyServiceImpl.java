@@ -54,9 +54,7 @@ public class RealtyServiceImpl implements RealtyService{
                 String gugunName = ddong.getGugunName();
 
                 if(sidoName.equals(dongValues.get(0))&&gugunName.equals(dongValues.get(1))){
-                    return ddong;
-                }
-            }
+                    retu
         return null;
     }
     @Override
