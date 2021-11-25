@@ -1,9 +1,7 @@
 package com.ssafy.happyhouse.interest.service;
 
-import com.ssafy.happyhouse.interest.model.InterestRealtyDto;
-
-import java.util.List;
+import com.ssafy.happyhouse.interest.model.InterestDistrictDto;
 
 public interface InterestDistrictService {
-
+    public InterestDistrictDto getInterestDistrictOne(String username) throws Exception;
 }

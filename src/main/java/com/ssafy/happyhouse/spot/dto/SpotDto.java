@@ -3,6 +3,7 @@ package com.ssafy.happyhouse.spot.dto;
 import com.ssafy.happyhouse.district.entity.Dong;
 import lombok.Builder;
 import lombok.Data;
+import org.locationtech.jts.geom.Point;
 
 import java.awt.*;
 

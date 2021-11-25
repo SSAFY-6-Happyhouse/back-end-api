@@ -12,6 +12,7 @@ spring:
     password: ssafy
     env: 3.37.1.251
   jpa:
+    database-platform: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect
     hibernate:
       ddl-auto: update
     defer-datasource-initialization: true
@@ -22,6 +23,7 @@ server:
 kakao:
   url:
     category: https://dapi.kakao.com/v2/local/search/category.json
+    address: https://dapi.kakao.com/v2/local/search/address.json
     keyword: https://dapi.kakao.com/v2/local/search/keword.json
   key:
     Authorization: KakaoAK 7fe1b040173a7ec41094ea2ca9879f2b
