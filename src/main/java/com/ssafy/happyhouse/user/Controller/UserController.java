@@ -1,4 +1,4 @@
-package com.ssafy.happyhouse.user.Controller;
+package com.ssafy.happyhouse.user.controller;
 
 import com.ssafy.happyhouse.user.model.LoginDto;
 import com.ssafy.happyhouse.user.model.UpdateDto;
