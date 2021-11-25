@@ -63,10 +63,11 @@ public class realtycontroller {
         return new ResponseEntity<>(realtyResponseDto, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/upload",method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Void> uploadImage(@ModelAttribute List<MultipartFile> files){
+    @RequestMapping(value = "/{realty-id}/upload",method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Void> uploadImage(@ModelAttribute List<MultipartFile> files
+                                            ,@PathVariable(value = "realty-id") Long realtyId){
         try{
-            realtyService.saveImage(files);
+            realtyService.saveImage(files,realtyId);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
