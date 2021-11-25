@@ -1,6 +1,11 @@
 package com.ssafy.happyhouse.user.service;
 
+import com.ssafy.happyhouse.district.entity.Dong;
+import com.ssafy.happyhouse.district.repository.DongRepository;
+import com.ssafy.happyhouse.interest.entity.InterestDistrict;
+import com.ssafy.happyhouse.interest.repository.InterestDistrictRepository;
 import com.ssafy.happyhouse.security.JwtTokenProvider;
+import com.ssafy.happyhouse.spot.entity.Segwon;
 import com.ssafy.happyhouse.user.entity.User;
 import com.ssafy.happyhouse.user.model.LoginDto;
 import com.ssafy.happyhouse.user.model.UpdateDto;
@@ -11,21 +16,24 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
+    private final InterestDistrictRepository interestDistrictRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final DongRepository dongRepository;
 
     @Override
     public String login(LoginDto loginDto) {
         User user = userRepository.findByUsername(loginDto.getUsername()).get();
         if(passwordEncoder.matches(loginDto.getPassword(), user.getPassword())){
-
             return jwtTokenProvider.createToken(new UsernamePasswordAuthenticationToken(user.getUsername(),"",user.getAuthority()));
         }else{
             return null;
@@ -38,7 +46,29 @@ public class UserServiceImpl implements UserService{
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
             try {
 //            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-                userRepository.save(userDto.toEntity());
+                User user = userDto.toEntity();
+                user = userRepository.save(user);
+                List<InterestDistrict> interestDistricts = new ArrayList<>();
+
+                for(String dongCode : userDto.getDongcode()){
+
+                    Dong dong = dongRepository.findByDongCode(dongCode).get();
+                    InterestDistrict interestDistrict= interestDistrictRepository.save(
+                            InterestDistrict.builder()
+                                    .dong(dong)
+                                    .user(user)
+                                    .build());
+
+                    interestDistricts.add(interestDistrict);
+                }
+                List<Segwon> segwons = new ArrayList<>();
+
+                for(Integer segwonId : userDto.getSegwon()){
+                    segwons.add(Segwon.values()[segwonId]);
+                }
+                user.setSegwons(segwons);
+                user.setInterestDistricts(interestDistricts);
+                userRepository.save(user);
             } catch (Exception e){
                 throw e;
             }
