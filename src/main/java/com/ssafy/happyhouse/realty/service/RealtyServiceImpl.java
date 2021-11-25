@@ -266,6 +266,8 @@ public class RealtyServiceImpl implements RealtyService{
                         .contractType(realty.getContractType())
                         .segwons(realty.getSegwons())
                         .price(realty.getPrice())
+                        .latitude(realty.getLatitude())
+                        .longitude(realty.getLongitude())
                         .build()).collect(Collectors.toList());
     }
 
