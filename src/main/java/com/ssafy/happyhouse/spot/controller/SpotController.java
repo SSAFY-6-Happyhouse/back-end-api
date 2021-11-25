@@ -49,7 +49,6 @@ public class SpotController {
       spotService.deleteSpot();
     }
 
-    //@GetMapping("/a")
     public void registerSpot() throws Exception {
 
         for(SpotKeyword spotKeyword : SpotKeyword.values()) {

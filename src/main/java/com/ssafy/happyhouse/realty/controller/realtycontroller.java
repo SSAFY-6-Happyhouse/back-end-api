@@ -4,15 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ssafy.happyhouse.realty.entity.Realty;
 import com.ssafy.happyhouse.realty.entity.RealtyPicture;
-import com.ssafy.happyhouse.realty.model.Marker;
-import com.ssafy.happyhouse.realty.model.RealtyDto;
-import com.ssafy.happyhouse.realty.model.RealtyPicturesDto;
-import com.ssafy.happyhouse.realty.model.RealtyResponseDto;
+import com.ssafy.happyhouse.realty.model.*;
 import com.ssafy.happyhouse.realty.service.RealtyService;
 import com.ssafy.happyhouse.realty.utils.MD5Generator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +19,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -67,6 +66,7 @@ public class realtycontroller {
     public ResponseEntity<Void> uploadImage(@ModelAttribute List<MultipartFile> files
                                             ,@PathVariable(value = "realty-id") Long realtyId){
         try{
+
             realtyService.saveImage(files,realtyId);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -81,8 +81,16 @@ public class realtycontroller {
     }
 
     @GetMapping
-    public ResponseEntity<List<Marker>> getRealtyMarkers(){
-        return new ResponseEntity<>(realtyService.getRealtyMarkers(), HttpStatus.OK);
+    public ResponseEntity<List<Marker>> getRealtyMarkers(@RequestParam(name = "district") @Nullable Long dongCode,
+                                                         @RequestParam(name = "contract-type") @Nullable List<Long> contractType,
+                                                         @RequestParam(name = "realty-type") @Nullable List<Long> realtyType,
+                                                         @RequestParam(name = "price") @Nullable Long price ,
+                                                         @RequestParam(name = "segwons") @Nullable List<Long> segwons,
+                                                         @RequestParam(name = "available-date") @Nullable LocalDateTime localDateTime,
+                                                         @RequestParam(name = "keyword")@Nullable String keyword){
+
+
+        return new ResponseEntity<>(realtyService.getRealtyMarkers(SearchMarker.builder().build()), HttpStatus.OK);
     }
 
     //

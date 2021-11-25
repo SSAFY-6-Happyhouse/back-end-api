@@ -6,6 +6,7 @@ import com.ssafy.happyhouse.realty.model.Coordinate;
 import com.ssafy.happyhouse.user.model.LoginDto;
 import com.ssafy.happyhouse.user.model.UpdateDto;
 import com.ssafy.happyhouse.user.model.UserDto;
+import com.ssafy.happyhouse.user.model.UserResponseDto;
 import com.ssafy.happyhouse.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -61,21 +62,27 @@ public class UserController {
         return new ResponseEntity<>(coordinate, HttpStatus.OK);
 
     }
-//    http header에 Authorization key의 Bearer ((토큰키))를 value로 response
+    @GetMapping
+    public ResponseEntity<UserResponseDto> getUserInfo(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken) {
+        String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
+        DecodedJWT decodedJWT = JWT.decode(token);//디코딩
+        String username = decodedJWT.getSubject();//이름 뽑아오기
+        UserResponseDto userResponseDto;
+        try{
+            userResponseDto = userService.getUserInfo(username);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-    //조회
-/*
-    @GetMapping(path = "/{user_id}")
-    public ResponseEntity<UserDto> getUserInfo(@PathVariable(name = "user_id") Long userId) {
-        //return new ResponseEntity<>(userService.getUserInfo(), HttpStatus.OK);
+        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
 
     //수정
     @PutMapping(path = "/{user_id}")
-    public  ResponseEntity<Void> updateUSer(@PathVariable(name = "user_id") Long userId, @RequestBody UserDto userDto) {
-        userDto.setId(userId);
+    public  ResponseEntity<Void> updateUSer(@PathVariable(name = "user_id") Long userId, @RequestBody UpdateDto updateDto) {
+        return null;
     }
-*/
 
     //삭제
     @DeleteMapping(path = "/{user_id}")

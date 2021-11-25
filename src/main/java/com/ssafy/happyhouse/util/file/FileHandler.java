@@ -18,7 +18,6 @@ import java.util.List;
 public class FileHandler {
 
     public List<String> parseFileInfo(List<MultipartFile> multipartFiles) throws Exception{
-        List<RealtyPicture> fileList = new ArrayList<>();
         List<String> locations = new ArrayList<>();
         if(!CollectionUtils.isEmpty(multipartFiles)) {
             LocalDateTime now = LocalDateTime.now();
@@ -30,6 +29,7 @@ public class FileHandler {
             String absolutePath = new File("").getAbsolutePath() + File.separator + File.separator;
 
             String path = "images" + File.separator + currentDate;
+
             File file = new File(path);
 
             if (!file.exists()) {
@@ -38,32 +38,37 @@ public class FileHandler {
                 if (!wasSuccessful) {
                     log.info("file : was not successful");
                 }
-                for (MultipartFile multipartFile : multipartFiles) {
 
-                    String originFileExtension;
-                    String contentType = multipartFile.getContentType();
+            }
+            for (MultipartFile multipartFile : multipartFiles) {
 
-                    if (ObjectUtils.isEmpty(contentType)) {
+                String originFileExtension;
+                String contentType = multipartFile.getContentType();
+
+                if (ObjectUtils.isEmpty(contentType)) {
+                    break;
+                } else {
+                    if (contentType.contains("image/jpeg"))
+                        originFileExtension = ".jpg";
+                    else if (contentType.contains("image/png"))
+                        originFileExtension = ".png";
+                    else
                         break;
-                    } else {
-                        if (contentType.contains("image/jpeg"))
-                            originFileExtension = ".jpg";
-                        else if (contentType.contains("image/png"))
-                            originFileExtension = ".png";
-                        else
-                            break;
-                    }
-
-                    String newFileName = System.nanoTime() + originFileExtension;
-
-                    file = new File(absolutePath + path + File.separator + newFileName);
-                    multipartFile.transferTo(file);
-                    locations.add(absolutePath+path+File.separator+newFileName);
-                    file.setWritable(true);
-                    file.setWritable(true);
                 }
+
+                String newFileName = System.nanoTime() + originFileExtension;
+
+                file = new File(absolutePath + path + File.separator + newFileName);
+                multipartFile.transferTo(file);
+                locations.add(File.separator+path+File.separator+newFileName);
+                file.setWritable(true);
+                file.setWritable(true);
             }
         }
+        else{
+            log.info("NO FILES");
+        }
+        log.info(locations.toString());
         return locations;
     }
 }

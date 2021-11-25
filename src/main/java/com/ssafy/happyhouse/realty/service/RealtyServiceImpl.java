@@ -64,15 +64,22 @@ public class RealtyServiceImpl implements RealtyService{
 
     @Override
     public String saveImage(List<MultipartFile> multipartFile, Long realtyId) throws Exception {
-        Realty realty = realtyRepository.findById(realtyId).get();
         try{
-           List<String> locations = fileHandler.parseFileInfo(multipartFile);
+            log.info("multipart1");
+            Realty realty = realtyRepository.findById(realtyId).get();
+            log.info("multipart2");
+
+            List<String> locations = fileHandler.parseFileInfo(multipartFile);
+            log.info("multipart3");
+
             realtyPictureRepository.saveAll(
                     locations.stream().map(location ->
                                     RealtyPicture.builder()
                                             .location(location)
                                             .realty(realty).build())
                             .collect(Collectors.toList()));
+            log.info("multipart4");
+
         } catch (Exception e){
             throw e;
         }
@@ -87,7 +94,6 @@ public class RealtyServiceImpl implements RealtyService{
 
             List<Option> options = new ArrayList<>();
             List<Long> optionValues = realtyDto.getOptions();
-            List<Segwon> segwons = new ArrayList<>();
             String dongstr = realtyDto.getDongstr();//서울특별시 성동구 응봉동
             List<String> dongValues = new ArrayList<>();
 
@@ -101,12 +107,7 @@ public class RealtyServiceImpl implements RealtyService{
             }
             log.info("NOT NULL");
 
-
-//            for(int i=0;i<segwonValues.size();i++){//땡세권 받아오기
-//                segwons.add(Segwon.values()[segwonValues.get(i).intValue()]);
-//            }
             Coordinate coordinate = kakaoMap.getCoordinatesFromAddress(realtyDto.getDongstr());
-
 
             Dong dong = checkValidDong(dongstr,dongValues);
             log.info("NOT NULL");
@@ -122,17 +123,14 @@ public class RealtyServiceImpl implements RealtyService{
             realty.setLatitude(coordinate.getLatitude());
             realty.setLongitude(coordinate.getLongitude());
 
-            log.info(spotService.getSegwonList(coordinate.getLongitude(),coordinate.getLatitude()).toString());
             realty.setSegwons(spotService.getSegwonList(coordinate.getLongitude(),coordinate.getLatitude()));
-
+            realty.setHitCount(0L);
             realty.setOptions(options);
-            realty.setSegwons(segwons);
             realty.setRealtyType(realtyType);
             realty.setContractProcess(contractProcess);
             realty.setContractType(contractType);
             realty.setRegisterer(user);
-
-
+            log.info(realty.getSegwons().toString());
             realtyRepository.save(realty); //dto에서는 service, repository layer에선 entity객체가 들어간다. 없으면 null이 들어감.
         }catch (Exception e){
                 throw e;
@@ -227,7 +225,8 @@ public class RealtyServiceImpl implements RealtyService{
         Dong dong = dongRepository.findById(realty.getDong().getDongId()).get();//Dong객체 갖고 오기
 
         //세권 정보, 옵션 정보, 관심
-//        List<Segwon> segwons = realty.getSegwons();
+        List<Segwon> segwons = realty.getSegwons();
+        log.info(segwons.toString());
         List<Option> options = realty.getOptions();
         List<RealtyPicture> realtyPictures = realty.getRealtyPictures();
         List<Enquiry> enquiries = realty.getEnquiries();
@@ -257,6 +256,9 @@ public class RealtyServiceImpl implements RealtyService{
                 .dongName(dong.getDongName())
                 .gugunName(dong.getGugunName())
                 .sidoName(dong.getSidoName())
+                .segwons(segwons)
+                .latitude(realty.getLatitude())
+                .longitude(realty.getLongitude())
                 .build();
     }
 
@@ -279,7 +281,7 @@ public class RealtyServiceImpl implements RealtyService{
 
 
     @Override
-    public List<Marker> getRealtyMarkers() {
+    public List<Marker> getRealtyMarkers(SearchMarker searchMarker) {
         List<Realty> realties = realtyRepository.findAll();
         //좌표에 맞게 search 해주기
 

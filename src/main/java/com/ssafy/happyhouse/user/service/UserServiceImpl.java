@@ -1,10 +1,12 @@
 package com.ssafy.happyhouse.user.service;
 
+import com.ssafy.happyhouse.district.dto.DongDto;
 import com.ssafy.happyhouse.district.entity.District;
 import com.ssafy.happyhouse.district.entity.Dong;
 import com.ssafy.happyhouse.district.repository.DistrictRepository;
 import com.ssafy.happyhouse.district.repository.DongRepository;
 import com.ssafy.happyhouse.interest.entity.InterestDistrict;
+import com.ssafy.happyhouse.interest.model.InterestDistrictDto;
 import com.ssafy.happyhouse.interest.repository.InterestDistrictRepository;
 import com.ssafy.happyhouse.realty.model.Coordinate;
 import com.ssafy.happyhouse.security.JwtTokenProvider;
@@ -13,6 +15,7 @@ import com.ssafy.happyhouse.user.entity.User;
 import com.ssafy.happyhouse.user.model.LoginDto;
 import com.ssafy.happyhouse.user.model.UpdateDto;
 import com.ssafy.happyhouse.user.model.UserDto;
+import com.ssafy.happyhouse.user.model.UserResponseDto;
 import com.ssafy.happyhouse.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -115,6 +119,33 @@ public class UserServiceImpl implements UserService{
         }catch (Exception e){
             throw e;
         }
+    }
+
+    @Override
+    public UserResponseDto getUserInfo(String username) {
+        User user = userRepository.findByUsername(username).get();
+        UserResponseDto userResponseDto;
+
+        try{
+             userResponseDto = UserResponseDto.builder()
+                    .userId(user.getUserId())
+                    .username(user.getUsername())
+                    .segwons(user.getSegwons())
+                    .interestDistricts(
+                            user.getInterestDistricts()
+                                    .stream().map(interestDistrict ->
+                                            DongDto.builder().dongName(interestDistrict.getDong().getDongName())
+                                                    .gugunName(interestDistrict.getDong().getGugunName())
+                                                    .dongId(interestDistrict.getDong().getDongId())
+                                                    .dongCode(interestDistrict.getDong().getDongCode())
+                                                    .sidoName(interestDistrict.getDong().getSidoName())
+                                                    .build()
+                                                    ).collect(Collectors.toList())).build();
+        }catch (Exception e){
+            throw e;
+        }
+
+        return userResponseDto;
     }
 
     @Override

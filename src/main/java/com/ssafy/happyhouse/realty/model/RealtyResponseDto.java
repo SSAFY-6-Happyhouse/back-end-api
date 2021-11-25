@@ -41,6 +41,9 @@ public class RealtyResponseDto {
     private String gugunName;
     private String dongName;
 
+    private Double latitude;
+    private Double longitude;
+
     private List<Option> options;
     private List<Segwon> segwons;
     private List<RealtyPicture> realtyPictures;
