@@ -7,11 +7,12 @@ import com.ssafy.happyhouse.interest.service.InterestDistrictService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/interestdistict")
@@ -21,10 +22,19 @@ public class InterestDistrictController {
 
     private final InterestDistrictService interestDistrictService;
 
-    public List<InterestDistrictDto> getInterestDistrict(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken){
+    @GetMapping
+    public ResponseEntity<InterestDistrictDto>  getInterestDistrict(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken){
         String token = bearerToken.replace("Bearer ","");
         DecodedJWT decodedJWT = JWT.decode(token);
         String username = decodedJWT.getSubject();
-        return null;
+        InterestDistrictDto interestDistrictDto;
+        try{
+            interestDistrictDto = interestDistrictService.getInterestDistrictOne(username);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(interestDistrictDto, HttpStatus.OK);
     }
+
 }
