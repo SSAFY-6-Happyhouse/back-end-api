@@ -43,8 +43,7 @@ public class RealtyResponseDto {
 
     private List<Option> options;
     private List<Segwon> segwons;
-    private List<RealtyPicture> realtyPictures;
-    private List<Enquiry> enquiries;
+    private List<String> realtyPicturesLocation;//엔티티, 로케이션 location넣어주기
 
     private LocalDateTime availableDate;
     private LocalDateTime registerDate;

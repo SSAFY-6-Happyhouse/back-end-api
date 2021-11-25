@@ -22,7 +22,10 @@ public class UserController {
         userService.saveUser(userDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
+    //회원정보 수정
+    //관심지역, 관심태그 null로 오면 그대로 있던게 아닌, User Entity에 있던 값을 null로 바꿔줘라.
+    //id,username은 바꾸지못하도록, password를 바꿀때는 , enconding을 시킨담에 바꿔라.  -> replace
+    //세권과 관심 지역 수정
     @PutMapping
     public ResponseEntity<UpdateDto> updateUser(@RequestBody UpdateDto updateDto) {
         UpdateDto responseDto;

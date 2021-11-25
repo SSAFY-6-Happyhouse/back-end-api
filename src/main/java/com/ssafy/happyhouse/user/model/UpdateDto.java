@@ -17,6 +17,6 @@ public class UpdateDto {
     private String username;
     private String password;
     private String phone;
-    private String interestDistricts;
-    private List<Segwon> segwons; // 수정 필요
+    private String interestDistricts; //관심지역
+    private List<Segwon> segwons; // 수정 필요, 관심태그
 }
