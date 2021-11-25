@@ -93,6 +93,7 @@ public class RealtyServiceImpl implements RealtyService{
 //            for(int i=0;i<segwonValues.size();i++){//땡세권 받아오기
 //                segwons.add(Segwon.values()[segwonValues.get(i).intValue()]);
 //            }
+
             Dong dong = checkValidDong(dongstr,dongValues);
             if(ObjectUtils.isEmpty(dong)) { //비어있다면 exception으로 끊어버리기
                 throw new Exception();
@@ -106,7 +107,7 @@ public class RealtyServiceImpl implements RealtyService{
             realty.setContractType(contractType);
             realty.setRegisterer(user);
 
-            Coordinate coordinate = kakaoMap.getCoordinatesFromAddress(realtyDto.getDongstr(),realtyDto.getAddress());
+            //Coordinate coordinate = kakaoMap.getCoordinatesFromAddress(realtyDto.getDongstr(),realtyDto.getAddress());
 
             realtyRepository.save(realty); //dto에서는 service, repository layer에선 entity객체가 들어간다. 없으면 null이 들어감.
         }catch (Exception e){
