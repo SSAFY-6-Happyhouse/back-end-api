@@ -63,9 +63,16 @@ public class RealtyServiceImpl implements RealtyService{
     }
 
     @Override
-    public String saveImage(List<MultipartFile> multipartFile) throws Exception {
+    public String saveImage(List<MultipartFile> multipartFile, Long realtyId) throws Exception {
+        Realty realty = realtyRepository.findById(realtyId).get();
         try{
-            fileHandler.parseFileInfo(multipartFile);
+           List<String> locations = fileHandler.parseFileInfo(multipartFile);
+            realtyPictureRepository.saveAll(
+                    locations.stream().map(location ->
+                                    RealtyPicture.builder()
+                                            .location(location)
+                                            .realty(realty).build())
+                            .collect(Collectors.toList()));
         } catch (Exception e){
             throw e;
         }
