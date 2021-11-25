@@ -8,6 +8,7 @@ import com.ssafy.happyhouse.realty.model.*;
 import com.ssafy.happyhouse.realty.repository.RealtyPictureRepository;
 import com.ssafy.happyhouse.realty.repository.RealtyRepository;
 import com.ssafy.happyhouse.spot.entity.Segwon;
+import com.ssafy.happyhouse.spot.service.SpotService;
 import com.ssafy.happyhouse.user.entity.User;
 import com.ssafy.happyhouse.user.repository.UserRepository;
 import com.ssafy.happyhouse.util.api.KakaoMap;
@@ -38,6 +39,7 @@ public class RealtyServiceImpl implements RealtyService{
     private final FileHandler fileHandler;
     private final ModelMapper modelMapper;
     private final KakaoMap kakaoMap;
+    private final SpotService spotService;
     //정석은 controller - service - servicimpl = 권한문제 발생할 수 있으므로
 
     @Override
@@ -79,27 +81,38 @@ public class RealtyServiceImpl implements RealtyService{
             List<Option> options = new ArrayList<>();
             List<Long> optionValues = realtyDto.getOptions();
             List<Segwon> segwons = new ArrayList<>();
-//            List<Long> segwonValues = realtyDto.getSegwons(); -> dto에서 받는게 아닌,segwon에게 받아야한다.
             String dongstr = realtyDto.getDongstr();//서울특별시 성동구 응봉동
             List<String> dongValues = new ArrayList<>();
 
             RealtyType realtyType = RealtyType.values()[realtyDto.getRealtyType().intValue()]; //매물 형태
             ContractProcess contractProcess = ContractProcess.values()[realtyDto.getContractProcess().intValue()]; //거래 상황
             ContractType contractType = ContractType.values()[realtyDto.getContractType().intValue()];//거래 형태
+            log.info("NOT NULL");
 
             for(int i = 0 ; i< optionValues.size(); i++){ //옵션 리스트로 받아오기
                 options.add(Option.values()[optionValues.get(i).intValue()]);
             }
+            log.info("NOT NULL");
+
+
 //            for(int i=0;i<segwonValues.size();i++){//땡세권 받아오기
 //                segwons.add(Segwon.values()[segwonValues.get(i).intValue()]);
 //            }
 
             Dong dong = checkValidDong(dongstr,dongValues);
+            log.info("NOT NULL");
+
             if(ObjectUtils.isEmpty(dong)) { //비어있다면 exception으로 끊어버리기
                 throw new Exception();
             }
             realty.setDong(dong);
-            
+            Coordinate coordinate = kakaoMap.getCoordinatesFromAddress(realtyDto.getDongstr(), realtyDto.getAddress());
+            realty.setLatitude(coordinate.getLatitude());
+            realty.setLongitude(coordinate.getLongitude());
+
+            log.info(spotService.getSegwonList(coordinate.getLongitude(),coordinate.getLatitude()).toString());
+            realty.setSegwons(spotService.getSegwonList(coordinate.getLongitude(),coordinate.getLatitude()));
+
             realty.setOptions(options);
             realty.setSegwons(segwons);
             realty.setRealtyType(realtyType);
@@ -107,7 +120,6 @@ public class RealtyServiceImpl implements RealtyService{
             realty.setContractType(contractType);
             realty.setRegisterer(user);
 
-            //Coordinate coordinate = kakaoMap.getCoordinatesFromAddress(realtyDto.getDongstr(),realtyDto.getAddress());
 
             realtyRepository.save(realty); //dto에서는 service, repository layer에선 entity객체가 들어간다. 없으면 null이 들어감.
         }catch (Exception e){

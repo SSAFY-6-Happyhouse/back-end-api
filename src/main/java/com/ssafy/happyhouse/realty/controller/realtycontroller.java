@@ -44,6 +44,7 @@ public class realtycontroller {
         try{
             realtyService.saveRealty(realtyDto,username);
         }catch(Exception e){
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
