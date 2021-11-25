@@ -59,7 +59,6 @@ public class RealtyServiceImpl implements RealtyService{
             }
         return null;
     }
-
     @Override
     public String saveImage(List<MultipartFile> multipartFile) throws Exception {
         try{
@@ -67,7 +66,6 @@ public class RealtyServiceImpl implements RealtyService{
         } catch (Exception e){
             throw e;
         }
-
         return null;
     }
     @Override
@@ -98,7 +96,6 @@ public class RealtyServiceImpl implements RealtyService{
                 throw new Exception();
             }
             realty.setDong(dong);
-            
             realty.setOptions(options);
             realty.setSegwons(segwons);
             realty.setRealtyType(realtyType);
